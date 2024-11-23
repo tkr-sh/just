@@ -1,5 +1,5 @@
 #[derive(Debug, PartialEq, Clone, Copy, Ord, PartialOrd, Eq)]
-pub(crate) enum StringDelimiter {
+pub enum StringDelimiter {
   Backtick,
   QuoteDouble,
   QuoteSingle,

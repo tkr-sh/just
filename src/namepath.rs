@@ -1,14 +1,14 @@
 use super::*;
 
 #[derive(Default, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub(crate) struct Namepath<'src>(Vec<Name<'src>>);
+pub struct Namepath<'src>(Vec<Name<'src>>);
 
 impl<'src> Namepath<'src> {
-  pub(crate) fn join(&self, name: Name<'src>) -> Self {
+  pub fn join(&self, name: Name<'src>) -> Self {
     Self(self.0.iter().copied().chain(iter::once(name)).collect())
   }
 
-  pub(crate) fn spaced(&self) -> ModulePath {
+  pub fn spaced(&self) -> ModulePath {
     ModulePath {
       path: self.0.iter().map(|name| name.lexeme().into()).collect(),
       spaced: true,

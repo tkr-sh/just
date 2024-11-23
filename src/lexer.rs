@@ -8,7 +8,7 @@ use {super::*, CompileErrorKind::*, TokenKind::*};
 /// was slower and generally godawful.  However, this should not be taken as a
 /// slight against regular expressions, the lexer was just idiosyncratically
 /// bad.
-pub(crate) struct Lexer<'src> {
+pub struct Lexer<'src> {
   /// Char iterator
   chars: Chars<'src>,
   /// Indentation stack
@@ -37,12 +37,12 @@ pub(crate) struct Lexer<'src> {
 
 impl<'src> Lexer<'src> {
   /// Lex `src`
-  pub(crate) fn lex(path: &'src Path, src: &'src str) -> CompileResult<'src, Vec<Token<'src>>> {
+  pub fn lex(path: &'src Path, src: &'src str) -> CompileResult<'src, Vec<Token<'src>>> {
     Self::new(path, src).tokenize()
   }
 
   #[cfg(test)]
-  pub(crate) fn test_lex(src: &'src str) -> CompileResult<'src, Vec<Token<'src>>> {
+  pub fn test_lex(src: &'src str) -> CompileResult<'src, Vec<Token<'src>>> {
     Self::new("justfile".as_ref(), src).tokenize()
   }
 
@@ -258,7 +258,7 @@ impl<'src> Lexer<'src> {
   }
 
   /// True if `text` could be an identifier
-  pub(crate) fn is_identifier(text: &str) -> bool {
+  pub fn is_identifier(text: &str) -> bool {
     if !text.chars().next().map_or(false, Self::is_identifier_start) {
       return false;
     }
@@ -273,12 +273,12 @@ impl<'src> Lexer<'src> {
   }
 
   /// True if `c` can be the first character of an identifier
-  pub(crate) fn is_identifier_start(c: char) -> bool {
+  pub fn is_identifier_start(c: char) -> bool {
     matches!(c, 'a'..='z' | 'A'..='Z' | '_')
   }
 
   /// True if `c` can be a continuation character of an identifier
-  pub(crate) fn is_identifier_continue(c: char) -> bool {
+  pub fn is_identifier_continue(c: char) -> bool {
     Self::is_identifier_start(c) || matches!(c, '0'..='9' | '-')
   }
 

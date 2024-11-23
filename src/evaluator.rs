@@ -1,14 +1,14 @@
 use super::*;
 
-pub(crate) struct Evaluator<'src: 'run, 'run> {
-  pub(crate) assignments: Option<&'run Table<'src, Assignment<'src>>>,
-  pub(crate) context: ExecutionContext<'src, 'run>,
-  pub(crate) is_dependency: bool,
-  pub(crate) scope: Scope<'src, 'run>,
+pub struct Evaluator<'src: 'run, 'run> {
+  pub assignments: Option<&'run Table<'src, Assignment<'src>>>,
+  pub context: ExecutionContext<'src, 'run>,
+  pub is_dependency: bool,
+  pub scope: Scope<'src, 'run>,
 }
 
 impl<'src, 'run> Evaluator<'src, 'run> {
-  pub(crate) fn evaluate_assignments(
+  pub fn evaluate_assignments(
     config: &'run Config,
     dotenv: &'run BTreeMap<String, String>,
     module: &'run Justfile<'src>,
@@ -83,7 +83,7 @@ impl<'src, 'run> Evaluator<'src, 'run> {
     Ok(self.scope.value(name).unwrap())
   }
 
-  pub(crate) fn evaluate_expression(
+  pub fn evaluate_expression(
     &mut self,
     expression: &Expression<'src>,
   ) -> RunResult<'src, String> {
@@ -258,7 +258,7 @@ impl<'src, 'run> Evaluator<'src, 'run> {
       })
   }
 
-  pub(crate) fn run_command(&self, command: &str, args: &[&str]) -> Result<String, OutputError> {
+  pub fn run_command(&self, command: &str, args: &[&str]) -> Result<String, OutputError> {
     let mut cmd = self
       .context
       .module
@@ -282,7 +282,7 @@ impl<'src, 'run> Evaluator<'src, 'run> {
     InterruptHandler::guard(|| output(cmd))
   }
 
-  pub(crate) fn evaluate_line(
+  pub fn evaluate_line(
     &mut self,
     line: &Line<'src>,
     continued: bool,
@@ -307,7 +307,7 @@ impl<'src, 'run> Evaluator<'src, 'run> {
     Ok(evaluated)
   }
 
-  pub(crate) fn evaluate_parameters(
+  pub fn evaluate_parameters(
     context: &ExecutionContext<'src, 'run>,
     is_dependency: bool,
     arguments: &[String],
@@ -357,7 +357,7 @@ impl<'src, 'run> Evaluator<'src, 'run> {
     Ok((evaluator.scope, positional))
   }
 
-  pub(crate) fn new(
+  pub fn new(
     context: &ExecutionContext<'src, 'run>,
     is_dependency: bool,
     scope: &'run Scope<'src, 'run>,

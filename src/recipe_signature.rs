@@ -1,8 +1,8 @@
 use super::*;
 
-pub(crate) struct RecipeSignature<'a> {
-  pub(crate) name: &'a str,
-  pub(crate) recipe: &'a Recipe<'a>,
+pub struct RecipeSignature<'a> {
+  pub name: &'a str,
+  pub recipe: &'a Recipe<'a>,
 }
 
 impl<'a> ColorDisplay for RecipeSignature<'a> {

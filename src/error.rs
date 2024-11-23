@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Debug)]
-pub(crate) enum Error<'src> {
+pub enum Error<'src> {
   AmbiguousModuleFile {
     module: Name<'src>,
     found: Vec<PathBuf>,
@@ -192,7 +192,7 @@ pub(crate) enum Error<'src> {
 }
 
 impl<'src> Error<'src> {
-  pub(crate) fn code(&self) -> Option<i32> {
+  pub fn code(&self) -> Option<i32> {
     match self {
       Self::Code { code, .. }
       | Self::Backtick {
@@ -217,13 +217,13 @@ impl<'src> Error<'src> {
     }
   }
 
-  pub(crate) fn internal(message: impl Into<String>) -> Self {
+  pub fn internal(message: impl Into<String>) -> Self {
     Self::Internal {
       message: message.into(),
     }
   }
 
-  pub(crate) fn print_message(&self) -> bool {
+  pub fn print_message(&self) -> bool {
     !matches!(
       self,
       Error::Code {

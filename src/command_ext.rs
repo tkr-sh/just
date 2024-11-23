@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) trait CommandExt {
+pub trait CommandExt {
   fn export(
     &mut self,
     settings: &Settings,

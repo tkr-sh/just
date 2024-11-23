@@ -1,9 +1,9 @@
 use super::*;
 
-pub(crate) struct InterruptGuard;
+pub struct InterruptGuard;
 
 impl InterruptGuard {
-  pub(crate) fn new() -> Self {
+  pub fn new() -> Self {
     InterruptHandler::instance().block();
     Self
   }

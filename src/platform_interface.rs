@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) trait PlatformInterface {
+pub trait PlatformInterface {
   /// Construct a command equivalent to running the script at `path` with the
   /// shebang line `shebang`
   fn make_shebang_command(

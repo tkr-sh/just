@@ -18,7 +18,7 @@ use {
 };
 
 mod full {
-  pub(crate) use crate::{
+  pub use crate::{
     assignment::Assignment, condition::Condition, conditional_operator::ConditionalOperator,
     dependency::Dependency, expression::Expression, fragment::Fragment, justfile::Justfile,
     line::Line, parameter::Parameter, parameter_kind::ParameterKind, recipe::Recipe, thunk::Thunk,

@@ -1,10 +1,10 @@
 use {super::*, pretty_assertions::assert_eq};
 
-pub(crate) fn compile(src: &str) -> Justfile {
+pub fn compile(src: &str) -> Justfile {
   Compiler::test_compile(src).expect("expected successful compilation")
 }
 
-pub(crate) fn config(args: &[&str]) -> Config {
+pub fn config(args: &[&str]) -> Config {
   let mut args = Vec::from(args);
   args.insert(0, "just");
 
@@ -15,7 +15,7 @@ pub(crate) fn config(args: &[&str]) -> Config {
   Config::from_matches(&matches).unwrap()
 }
 
-pub(crate) fn search(config: &Config) -> Search {
+pub fn search(config: &Config) -> Search {
   let working_directory = config.invocation_directory.clone();
   let justfile = working_directory.join("justfile");
 
@@ -25,7 +25,7 @@ pub(crate) fn search(config: &Config) -> Search {
   }
 }
 
-pub(crate) fn tempdir() -> tempfile::TempDir {
+pub fn tempdir() -> tempfile::TempDir {
   tempfile::Builder::new()
     .prefix("just-test-tempdir")
     .tempdir()
@@ -49,7 +49,7 @@ macro_rules! analysis_error {
   };
 }
 
-pub(crate) fn analysis_error(
+pub fn analysis_error(
   src: &str,
   offset: usize,
   line: usize,

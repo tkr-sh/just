@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(ValueEnum, Debug, Clone, Copy, PartialEq)]
-pub(crate) enum Shell {
+pub enum Shell {
   Bash,
   Elvish,
   Fish,
@@ -12,7 +12,7 @@ pub(crate) enum Shell {
 }
 
 impl Shell {
-  pub(crate) fn script(self) -> RunResult<'static, String> {
+  pub fn script(self) -> RunResult<'static, String> {
     match self {
       Self::Bash => completions::clap(clap_complete::Shell::Bash),
       Self::Elvish => completions::clap(clap_complete::Shell::Elvish),

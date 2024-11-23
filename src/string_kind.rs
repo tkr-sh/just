@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(Debug, PartialEq, Clone, Copy, Ord, PartialOrd, Eq)]
-pub(crate) struct StringKind {
-  pub(crate) delimiter: StringDelimiter,
-  pub(crate) indented: bool,
+pub struct StringKind {
+  pub delimiter: StringDelimiter,
+  pub indented: bool,
 }
 
 impl StringKind {
@@ -26,7 +26,7 @@ impl StringKind {
     }
   }
 
-  pub(crate) fn delimiter(self) -> &'static str {
+  pub fn delimiter(self) -> &'static str {
     match (self.delimiter, self.indented) {
       (StringDelimiter::Backtick, false) => "`",
       (StringDelimiter::Backtick, true) => "```",
@@ -37,18 +37,18 @@ impl StringKind {
     }
   }
 
-  pub(crate) fn delimiter_len(self) -> usize {
+  pub fn delimiter_len(self) -> usize {
     self.delimiter().len()
   }
 
-  pub(crate) fn token_kind(self) -> TokenKind {
+  pub fn token_kind(self) -> TokenKind {
     match self.delimiter {
       StringDelimiter::QuoteDouble | StringDelimiter::QuoteSingle => TokenKind::StringToken,
       StringDelimiter::Backtick => TokenKind::Backtick,
     }
   }
 
-  pub(crate) fn unterminated_error_kind(self) -> CompileErrorKind<'static> {
+  pub fn unterminated_error_kind(self) -> CompileErrorKind<'static> {
     match self.delimiter {
       StringDelimiter::QuoteDouble | StringDelimiter::QuoteSingle => {
         CompileErrorKind::UnterminatedString
@@ -57,18 +57,18 @@ impl StringKind {
     }
   }
 
-  pub(crate) fn processes_escape_sequences(self) -> bool {
+  pub fn processes_escape_sequences(self) -> bool {
     match self.delimiter {
       StringDelimiter::QuoteDouble => true,
       StringDelimiter::Backtick | StringDelimiter::QuoteSingle => false,
     }
   }
 
-  pub(crate) fn indented(self) -> bool {
+  pub fn indented(self) -> bool {
     self.indented
   }
 
-  pub(crate) fn from_string_or_backtick(token: Token) -> CompileResult<Self> {
+  pub fn from_string_or_backtick(token: Token) -> CompileResult<Self> {
     Self::from_token_start(token.lexeme()).ok_or_else(|| {
       token.error(CompileErrorKind::Internal {
         message: "StringKind::from_token: Expected String or Backtick".to_owned(),
@@ -76,7 +76,7 @@ impl StringKind {
     })
   }
 
-  pub(crate) fn from_token_start(token_start: &str) -> Option<Self> {
+  pub fn from_token_start(token_start: &str) -> Option<Self> {
     Self::ALL
       .iter()
       .find(|&&kind| token_start.starts_with(kind.delimiter()))

@@ -2,7 +2,7 @@ use super::*;
 
 /// A line fragment consisting either of…
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) enum Fragment<'src> {
+pub enum Fragment<'src> {
   /// …raw text…
   Text { token: Token<'src> },
   /// …an interpolation containing `expression`.

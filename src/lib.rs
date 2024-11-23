@@ -4,7 +4,7 @@
 //! Please keep in mind that there are no semantic version guarantees for the
 //! library interface. It may break or change at any time.
 
-pub(crate) use {
+pub use {
   crate::{
     alias::Alias, analyzer::Analyzer, argument_parser::ArgumentParser, assignment::Assignment,
     assignment_resolver::AssignmentResolver, ast::Ast, attribute::Attribute, binding::Binding,
@@ -72,7 +72,7 @@ pub(crate) use {
 };
 
 #[cfg(test)]
-pub(crate) use crate::{node::Node, tree::Tree};
+pub use crate::{node::Node, tree::Tree};
 
 pub use crate::run::run;
 
@@ -83,7 +83,7 @@ pub use unindent::unindent;
 type CompileResult<'a, T = ()> = Result<T, CompileError<'a>>;
 type ConfigResult<T> = Result<T, ConfigError>;
 type FunctionResult = Result<String, String>;
-type RunResult<'a, T = ()> = Result<T, Error<'a>>;
+pub type RunResult<'a, T = ()> = Result<T, Error<'a>>;
 type SearchResult<T> = Result<T, SearchError>;
 
 #[cfg(test)]

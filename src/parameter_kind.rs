@@ -3,7 +3,7 @@ use super::*;
 /// Parameters can either be…
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
-pub(crate) enum ParameterKind {
+pub enum ParameterKind {
   /// …singular, accepting a single argument
   Singular,
   /// …variadic, accepting one or more arguments
@@ -13,7 +13,7 @@ pub(crate) enum ParameterKind {
 }
 
 impl ParameterKind {
-  pub(crate) fn prefix(self) -> Option<&'static str> {
+  pub fn prefix(self) -> Option<&'static str> {
     match self {
       Self::Singular => None,
       Self::Plus => Some("+"),
@@ -21,7 +21,7 @@ impl ParameterKind {
     }
   }
 
-  pub(crate) fn is_variadic(self) -> bool {
+  pub fn is_variadic(self) -> bool {
     self != Self::Singular
   }
 }

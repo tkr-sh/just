@@ -1,17 +1,17 @@
 use super::*;
 
 #[derive(Debug, PartialEq)]
-pub(crate) struct CompileError<'src> {
-  pub(crate) token: Token<'src>,
-  pub(crate) kind: Box<CompileErrorKind<'src>>,
+pub struct CompileError<'src> {
+  pub token: Token<'src>,
+  pub kind: Box<CompileErrorKind<'src>>,
 }
 
 impl<'src> CompileError<'src> {
-  pub(crate) fn context(&self) -> Token<'src> {
+  pub fn context(&self) -> Token<'src> {
     self.token
   }
 
-  pub(crate) fn new(token: Token<'src>, kind: CompileErrorKind<'src>) -> CompileError<'src> {
+  pub fn new(token: Token<'src>, kind: CompileErrorKind<'src>) -> CompileError<'src> {
     Self {
       token,
       kind: kind.into(),

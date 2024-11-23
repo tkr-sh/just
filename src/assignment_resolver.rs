@@ -1,13 +1,13 @@
 use {super::*, CompileErrorKind::*};
 
-pub(crate) struct AssignmentResolver<'src: 'run, 'run> {
+pub struct AssignmentResolver<'src: 'run, 'run> {
   assignments: &'run Table<'src, Assignment<'src>>,
   stack: Vec<&'src str>,
   evaluated: BTreeSet<&'src str>,
 }
 
 impl<'src: 'run, 'run> AssignmentResolver<'src, 'run> {
-  pub(crate) fn resolve_assignments(
+  pub fn resolve_assignments(
     assignments: &'run Table<'src, Assignment<'src>>,
   ) -> CompileResult<'src> {
     let mut resolver = Self {

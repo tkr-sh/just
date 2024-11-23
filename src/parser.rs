@@ -23,7 +23,7 @@ use {super::*, TokenKind::*};
 /// does not find it, it adds that token to the set. When the parser accepts a
 /// token, the set is cleared. If the parser finds a token which is unexpected,
 /// the elements of the set are printed in the resultant error message.
-pub(crate) struct Parser<'run, 'src> {
+pub struct Parser<'run, 'src> {
   expected_tokens: BTreeSet<TokenKind>,
   file_depth: u32,
   import_offsets: Vec<usize>,
@@ -37,7 +37,7 @@ pub(crate) struct Parser<'run, 'src> {
 
 impl<'run, 'src> Parser<'run, 'src> {
   /// Parse `tokens` into an `Ast`
-  pub(crate) fn parse(
+  pub fn parse(
     file_depth: u32,
     import_offsets: &[usize],
     module_namepath: &'run Namepath<'src>,

@@ -2,7 +2,7 @@ use super::*;
 
 #[derive_where(Debug, PartialEq)]
 #[derive(Clone)]
-pub(crate) enum Thunk<'src> {
+pub enum Thunk<'src> {
   Nullary {
     name: Name<'src>,
     #[derive_where(skip(Debug, EqHashOrd))]
@@ -47,7 +47,7 @@ pub(crate) enum Thunk<'src> {
 }
 
 impl<'src> Thunk<'src> {
-  pub(crate) fn name(&self) -> Name<'src> {
+  pub fn name(&self) -> Name<'src> {
     match self {
       Self::Nullary { name, .. }
       | Self::Unary { name, .. }
@@ -59,7 +59,7 @@ impl<'src> Thunk<'src> {
     }
   }
 
-  pub(crate) fn resolve(
+  pub fn resolve(
     name: Name<'src>,
     mut arguments: Vec<Expression<'src>>,
   ) -> CompileResult<'src, Thunk<'src>> {

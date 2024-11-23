@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Copy, Clone, ValueEnum)]
-pub(crate) enum CommandColor {
+pub enum CommandColor {
   Black,
   Blue,
   Cyan,

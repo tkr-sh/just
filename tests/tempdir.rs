@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) fn tempdir() -> TempDir {
+pub fn tempdir() -> TempDir {
   let mut builder = tempfile::Builder::new();
 
   builder.prefix("just-test-tempdir");

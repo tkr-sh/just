@@ -1,35 +1,35 @@
 use super::*;
 
-pub(crate) const DEFAULT_SHELL: &str = "sh";
-pub(crate) const DEFAULT_SHELL_ARGS: &[&str] = &["-cu"];
-pub(crate) const WINDOWS_POWERSHELL_SHELL: &str = "powershell.exe";
-pub(crate) const WINDOWS_POWERSHELL_ARGS: &[&str] = &["-NoLogo", "-Command"];
+pub const DEFAULT_SHELL: &str = "sh";
+pub const DEFAULT_SHELL_ARGS: &[&str] = &["-cu"];
+pub const WINDOWS_POWERSHELL_SHELL: &str = "powershell.exe";
+pub const WINDOWS_POWERSHELL_ARGS: &[&str] = &["-NoLogo", "-Command"];
 
 #[derive(Debug, PartialEq, Serialize, Default)]
-pub(crate) struct Settings<'src> {
-  pub(crate) allow_duplicate_recipes: bool,
-  pub(crate) allow_duplicate_variables: bool,
-  pub(crate) dotenv_filename: Option<String>,
-  pub(crate) dotenv_load: bool,
-  pub(crate) dotenv_path: Option<PathBuf>,
-  pub(crate) dotenv_required: bool,
-  pub(crate) export: bool,
-  pub(crate) fallback: bool,
-  pub(crate) ignore_comments: bool,
-  pub(crate) positional_arguments: bool,
-  pub(crate) quiet: bool,
+pub struct Settings<'src> {
+  pub allow_duplicate_recipes: bool,
+  pub allow_duplicate_variables: bool,
+  pub dotenv_filename: Option<String>,
+  pub dotenv_load: bool,
+  pub dotenv_path: Option<PathBuf>,
+  pub dotenv_required: bool,
+  pub export: bool,
+  pub fallback: bool,
+  pub ignore_comments: bool,
+  pub positional_arguments: bool,
+  pub quiet: bool,
   #[serde(skip)]
-  pub(crate) script_interpreter: Option<Interpreter<'src>>,
-  pub(crate) shell: Option<Interpreter<'src>>,
-  pub(crate) tempdir: Option<String>,
-  pub(crate) unstable: bool,
-  pub(crate) windows_powershell: bool,
-  pub(crate) windows_shell: Option<Interpreter<'src>>,
-  pub(crate) working_directory: Option<PathBuf>,
+  pub script_interpreter: Option<Interpreter<'src>>,
+  pub shell: Option<Interpreter<'src>>,
+  pub tempdir: Option<String>,
+  pub unstable: bool,
+  pub windows_powershell: bool,
+  pub windows_shell: Option<Interpreter<'src>>,
+  pub working_directory: Option<PathBuf>,
 }
 
 impl<'src> Settings<'src> {
-  pub(crate) fn from_table(sets: Table<'src, Set<'src>>) -> Self {
+  pub fn from_table(sets: Table<'src, Set<'src>>) -> Self {
     let mut settings = Self::default();
 
     for (_name, set) in sets {
@@ -94,7 +94,7 @@ impl<'src> Settings<'src> {
     settings
   }
 
-  pub(crate) fn shell_command(&self, config: &Config) -> Command {
+  pub fn shell_command(&self, config: &Config) -> Command {
     let (command, args) = self.shell(config);
 
     let mut cmd = Command::new(command);
@@ -104,7 +104,7 @@ impl<'src> Settings<'src> {
     cmd
   }
 
-  pub(crate) fn shell<'a>(&'a self, config: &'a Config) -> (&'a str, Vec<&'a str>) {
+  pub fn shell<'a>(&'a self, config: &'a Config) -> (&'a str, Vec<&'a str>) {
     match (&config.shell, &config.shell_args) {
       (Some(shell), Some(shell_args)) => (shell, shell_args.iter().map(String::as_ref).collect()),
       (Some(shell), None) => (shell, DEFAULT_SHELL_ARGS.to_vec()),

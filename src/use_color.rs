@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Copy, Clone, Debug, PartialEq, ValueEnum)]
-pub(crate) enum UseColor {
+pub enum UseColor {
   Auto,
   Always,
   Never,

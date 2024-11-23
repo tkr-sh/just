@@ -7,7 +7,7 @@ use super::*;
 ///
 /// The parser parses both values and expressions into `Expression`s.
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) enum Expression<'src> {
+pub enum Expression<'src> {
   /// `lhs && rhs`
   And {
     lhs: Box<Expression<'src>>,
@@ -55,7 +55,7 @@ pub(crate) enum Expression<'src> {
 }
 
 impl<'src> Expression<'src> {
-  pub(crate) fn variables<'expression>(&'expression self) -> Variables<'expression, 'src> {
+  pub fn variables<'expression>(&'expression self) -> Variables<'expression, 'src> {
     Variables::new(self)
   }
 }

@@ -10,7 +10,7 @@ use {
   Function::*,
 };
 
-pub(crate) enum Function {
+pub enum Function {
   Nullary(fn(Context) -> FunctionResult),
   Unary(fn(Context, &str) -> FunctionResult),
   UnaryOpt(fn(Context, &str, Option<&str>) -> FunctionResult),
@@ -20,18 +20,18 @@ pub(crate) enum Function {
   Ternary(fn(Context, &str, &str, &str) -> FunctionResult),
 }
 
-pub(crate) struct Context<'src: 'run, 'run> {
-  pub(crate) evaluator: &'run Evaluator<'src, 'run>,
-  pub(crate) name: Name<'src>,
+pub struct Context<'src: 'run, 'run> {
+  pub evaluator: &'run Evaluator<'src, 'run>,
+  pub name: Name<'src>,
 }
 
 impl<'src: 'run, 'run> Context<'src, 'run> {
-  pub(crate) fn new(evaluator: &'run Evaluator<'src, 'run>, name: Name<'src>) -> Self {
+  pub fn new(evaluator: &'run Evaluator<'src, 'run>, name: Name<'src>) -> Self {
     Self { evaluator, name }
   }
 }
 
-pub(crate) fn get(name: &str) -> Option<Function> {
+pub fn get(name: &str) -> Option<Function> {
   let name = if let Some(prefix) = name.strip_suffix("_dir") {
     format!("{prefix}_directory")
   } else if let Some(prefix) = name.strip_suffix("_dir_native") {
@@ -117,7 +117,7 @@ pub(crate) fn get(name: &str) -> Option<Function> {
 }
 
 impl Function {
-  pub(crate) fn argc(&self) -> RangeInclusive<usize> {
+  pub fn argc(&self) -> RangeInclusive<usize> {
     match *self {
       Nullary(_) => 0..=0,
       Unary(_) => 1..=1,

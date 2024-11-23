@@ -1,5 +1,5 @@
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
-pub(crate) enum Verbosity {
+pub enum Verbosity {
   Quiet,
   Taciturn,
   Loquacious,
@@ -7,7 +7,7 @@ pub(crate) enum Verbosity {
 }
 
 impl Verbosity {
-  pub(crate) fn from_flag_occurrences(flag_occurrences: u8) -> Self {
+  pub fn from_flag_occurrences(flag_occurrences: u8) -> Self {
     match flag_occurrences {
       0 => Self::Taciturn,
       1 => Self::Loquacious,
@@ -15,19 +15,19 @@ impl Verbosity {
     }
   }
 
-  pub(crate) fn quiet(self) -> bool {
+  pub fn quiet(self) -> bool {
     self == Self::Quiet
   }
 
-  pub(crate) fn loud(self) -> bool {
+  pub fn loud(self) -> bool {
     !self.quiet()
   }
 
-  pub(crate) fn loquacious(self) -> bool {
+  pub fn loquacious(self) -> bool {
     self >= Self::Loquacious
   }
 
-  pub(crate) fn grandiloquent(self) -> bool {
+  pub fn grandiloquent(self) -> bool {
     self >= Self::Grandiloquent
   }
 

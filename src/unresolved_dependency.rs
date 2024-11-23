@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) struct UnresolvedDependency<'src> {
-  pub(crate) recipe: Name<'src>,
-  pub(crate) arguments: Vec<Expression<'src>>,
+pub struct UnresolvedDependency<'src> {
+  pub recipe: Name<'src>,
+  pub arguments: Vec<Expression<'src>>,
 }
 
 impl<'src> Display for UnresolvedDependency<'src> {

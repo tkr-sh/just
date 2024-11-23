@@ -37,36 +37,36 @@ macro_rules! test {
   }
 }
 
-pub(crate) struct Output {
-  pub(crate) pid: u32,
-  pub(crate) stdout: String,
-  pub(crate) tempdir: TempDir,
+pub struct Output {
+  pub pid: u32,
+  pub stdout: String,
+  pub tempdir: TempDir,
 }
 
 #[must_use]
-pub(crate) struct Test {
-  pub(crate) args: Vec<String>,
-  pub(crate) current_dir: PathBuf,
-  pub(crate) env: BTreeMap<String, String>,
-  pub(crate) justfile: Option<String>,
-  pub(crate) shell: bool,
-  pub(crate) status: i32,
-  pub(crate) stderr: String,
-  pub(crate) stderr_regex: Option<Regex>,
-  pub(crate) stdin: String,
-  pub(crate) stdout: String,
-  pub(crate) stdout_regex: Option<Regex>,
-  pub(crate) tempdir: TempDir,
-  pub(crate) test_round_trip: bool,
-  pub(crate) unindent_stdout: bool,
+pub struct Test {
+  pub args: Vec<String>,
+  pub current_dir: PathBuf,
+  pub env: BTreeMap<String, String>,
+  pub justfile: Option<String>,
+  pub shell: bool,
+  pub status: i32,
+  pub stderr: String,
+  pub stderr_regex: Option<Regex>,
+  pub stdin: String,
+  pub stdout: String,
+  pub stdout_regex: Option<Regex>,
+  pub tempdir: TempDir,
+  pub test_round_trip: bool,
+  pub unindent_stdout: bool,
 }
 
 impl Test {
-  pub(crate) fn new() -> Self {
+  pub fn new() -> Self {
     Self::with_tempdir(tempdir())
   }
 
-  pub(crate) fn with_tempdir(tempdir: TempDir) -> Self {
+  pub fn with_tempdir(tempdir: TempDir) -> Self {
     Self {
       args: Vec::new(),
       current_dir: PathBuf::new(),
@@ -85,45 +85,45 @@ impl Test {
     }
   }
 
-  pub(crate) fn arg(mut self, val: &str) -> Self {
+  pub fn arg(mut self, val: &str) -> Self {
     self.args.push(val.to_owned());
     self
   }
 
-  pub(crate) fn args<'a>(mut self, args: impl AsRef<[&'a str]>) -> Self {
+  pub fn args<'a>(mut self, args: impl AsRef<[&'a str]>) -> Self {
     for arg in args.as_ref() {
       self = self.arg(arg);
     }
     self
   }
 
-  pub(crate) fn create_dir(self, path: impl AsRef<Path>) -> Self {
+  pub fn create_dir(self, path: impl AsRef<Path>) -> Self {
     fs::create_dir_all(self.tempdir.path().join(path.as_ref())).unwrap();
     self
   }
 
-  pub(crate) fn current_dir(mut self, path: impl AsRef<Path>) -> Self {
+  pub fn current_dir(mut self, path: impl AsRef<Path>) -> Self {
     path.as_ref().clone_into(&mut self.current_dir);
     self
   }
 
-  pub(crate) fn env(mut self, key: &str, val: &str) -> Self {
+  pub fn env(mut self, key: &str, val: &str) -> Self {
     self.env.insert(key.to_string(), val.to_string());
     self
   }
 
-  pub(crate) fn justfile(mut self, justfile: impl Into<String>) -> Self {
+  pub fn justfile(mut self, justfile: impl Into<String>) -> Self {
     self.justfile = Some(justfile.into());
     self
   }
 
-  pub(crate) fn justfile_path(&self) -> PathBuf {
+  pub fn justfile_path(&self) -> PathBuf {
     self.tempdir.path().join("justfile")
   }
 
   #[cfg(unix)]
   #[track_caller]
-  pub(crate) fn symlink(self, original: &str, link: &str) -> Self {
+  pub fn symlink(self, original: &str, link: &str) -> Self {
     std::os::unix::fs::symlink(
       self.tempdir.path().join(original),
       self.tempdir.path().join(link),
@@ -132,64 +132,64 @@ impl Test {
     self
   }
 
-  pub(crate) fn no_justfile(mut self) -> Self {
+  pub fn no_justfile(mut self) -> Self {
     self.justfile = None;
     self
   }
 
-  pub(crate) fn shell(mut self, shell: bool) -> Self {
+  pub fn shell(mut self, shell: bool) -> Self {
     self.shell = shell;
     self
   }
 
-  pub(crate) fn status(mut self, exit_status: i32) -> Self {
+  pub fn status(mut self, exit_status: i32) -> Self {
     self.status = exit_status;
     self
   }
 
-  pub(crate) fn stderr(mut self, stderr: impl Into<String>) -> Self {
+  pub fn stderr(mut self, stderr: impl Into<String>) -> Self {
     self.stderr = stderr.into();
     self
   }
 
-  pub(crate) fn stderr_regex(mut self, stderr_regex: impl AsRef<str>) -> Self {
+  pub fn stderr_regex(mut self, stderr_regex: impl AsRef<str>) -> Self {
     self.stderr_regex = Some(Regex::new(&format!("^(?s){}$", stderr_regex.as_ref())).unwrap());
     self
   }
 
-  pub(crate) fn stdin(mut self, stdin: impl Into<String>) -> Self {
+  pub fn stdin(mut self, stdin: impl Into<String>) -> Self {
     self.stdin = stdin.into();
     self
   }
 
-  pub(crate) fn stdout(mut self, stdout: impl Into<String>) -> Self {
+  pub fn stdout(mut self, stdout: impl Into<String>) -> Self {
     self.stdout = stdout.into();
     self
   }
 
-  pub(crate) fn stdout_regex(mut self, stdout_regex: impl AsRef<str>) -> Self {
+  pub fn stdout_regex(mut self, stdout_regex: impl AsRef<str>) -> Self {
     self.stdout_regex = Some(Regex::new(&format!("^{}$", stdout_regex.as_ref())).unwrap());
     self
   }
 
   #[allow(unused)]
-  pub(crate) fn test_round_trip(mut self, test_round_trip: bool) -> Self {
+  pub fn test_round_trip(mut self, test_round_trip: bool) -> Self {
     self.test_round_trip = test_round_trip;
     self
   }
 
-  pub(crate) fn tree(self, mut tree: Tree) -> Self {
+  pub fn tree(self, mut tree: Tree) -> Self {
     tree.map(|_name, content| unindent(content));
     tree.instantiate(self.tempdir.path()).unwrap();
     self
   }
 
-  pub(crate) fn unindent_stdout(mut self, unindent_stdout: bool) -> Self {
+  pub fn unindent_stdout(mut self, unindent_stdout: bool) -> Self {
     self.unindent_stdout = unindent_stdout;
     self
   }
 
-  pub(crate) fn write(self, path: impl AsRef<Path>, content: impl AsRef<[u8]>) -> Self {
+  pub fn write(self, path: impl AsRef<Path>, content: impl AsRef<[u8]>) -> Self {
     let path = self.tempdir.path().join(path);
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, content).unwrap();
@@ -199,7 +199,7 @@ impl Test {
 
 impl Test {
   #[track_caller]
-  pub(crate) fn run(self) -> Output {
+  pub fn run(self) -> Output {
     fn compare<T: PartialEq + Debug>(name: &str, have: T, want: T) -> bool {
       let equal = have == want;
       if !equal {

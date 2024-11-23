@@ -1,7 +1,7 @@
 use super::*;
 
 /// Run a command and return the data it wrote to stdout as a string
-pub(crate) fn output(mut command: Command) -> Result<String, OutputError> {
+pub fn output(mut command: Command) -> Result<String, OutputError> {
   match command.output() {
     Ok(output) => {
       if let Some(code) = output.status.code() {

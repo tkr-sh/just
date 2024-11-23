@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) fn load_dotenv(
+pub fn load_dotenv(
   config: &Config,
   settings: &Settings,
   working_directory: &Path,

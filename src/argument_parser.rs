@@ -17,20 +17,20 @@ use super::*;
 /// an example, `foo bar baz` may refer to recipe `foo::bar` with argument
 /// `baz`, but `foo::bar::baz` is an error, since `bar` is a recipe, not a
 /// module.
-pub(crate) struct ArgumentParser<'src: 'run, 'run> {
+pub struct ArgumentParser<'src: 'run, 'run> {
   arguments: &'run [&'run str],
   next: usize,
   root: &'run Justfile<'src>,
 }
 
 #[derive(Debug, PartialEq)]
-pub(crate) struct ArgumentGroup<'run> {
-  pub(crate) arguments: Vec<&'run str>,
-  pub(crate) path: Vec<String>,
+pub struct ArgumentGroup<'run> {
+  pub arguments: Vec<&'run str>,
+  pub path: Vec<String>,
 }
 
 impl<'src: 'run, 'run> ArgumentParser<'src, 'run> {
-  pub(crate) fn parse_arguments(
+  pub fn parse_arguments(
     root: &'run Justfile<'src>,
     arguments: &'run [&'run str],
   ) -> RunResult<'src, Vec<ArgumentGroup<'run>>> {

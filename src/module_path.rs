@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(Debug, PartialEq, Clone)]
-pub(crate) struct ModulePath {
-  pub(crate) path: Vec<String>,
-  pub(crate) spaced: bool,
+pub struct ModulePath {
+  pub path: Vec<String>,
+  pub spaced: bool,
 }
 
 impl TryFrom<&[&str]> for ModulePath {

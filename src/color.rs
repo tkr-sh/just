@@ -5,7 +5,7 @@ use {
 };
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub(crate) struct Color {
+pub struct Color {
   is_terminal: bool,
   style: Style,
   use_color: UseColor,
@@ -31,61 +31,61 @@ impl Color {
     }
   }
 
-  pub(crate) fn auto() -> Self {
+  pub fn auto() -> Self {
     Self::default()
   }
 
-  pub(crate) fn always() -> Self {
+  pub fn always() -> Self {
     Self {
       use_color: UseColor::Always,
       ..Self::default()
     }
   }
 
-  pub(crate) fn never() -> Self {
+  pub fn never() -> Self {
     Self {
       use_color: UseColor::Never,
       ..Self::default()
     }
   }
 
-  pub(crate) fn stderr(self) -> Self {
+  pub fn stderr(self) -> Self {
     self.redirect(io::stderr())
   }
 
-  pub(crate) fn stdout(self) -> Self {
+  pub fn stdout(self) -> Self {
     self.redirect(io::stdout())
   }
 
-  pub(crate) fn context(self) -> Self {
+  pub fn context(self) -> Self {
     self.restyle(Style::new().fg(Blue).bold())
   }
 
-  pub(crate) fn doc(self) -> Self {
+  pub fn doc(self) -> Self {
     self.restyle(Style::new().fg(Blue))
   }
 
-  pub(crate) fn doc_backtick(self) -> Self {
+  pub fn doc_backtick(self) -> Self {
     self.restyle(Style::new().fg(Cyan))
   }
 
-  pub(crate) fn error(self) -> Self {
+  pub fn error(self) -> Self {
     self.restyle(Style::new().fg(Red).bold())
   }
 
-  pub(crate) fn group(self) -> Self {
+  pub fn group(self) -> Self {
     self.restyle(Style::new().fg(Yellow).bold())
   }
 
-  pub(crate) fn warning(self) -> Self {
+  pub fn warning(self) -> Self {
     self.restyle(Style::new().fg(Yellow).bold())
   }
 
-  pub(crate) fn banner(self) -> Self {
+  pub fn banner(self) -> Self {
     self.restyle(Style::new().fg(Cyan).bold())
   }
 
-  pub(crate) fn command(self, foreground: Option<ansi_term::Color>) -> Self {
+  pub fn command(self, foreground: Option<ansi_term::Color>) -> Self {
     self.restyle(Style {
       foreground,
       is_bold: true,
@@ -93,31 +93,31 @@ impl Color {
     })
   }
 
-  pub(crate) fn parameter(self) -> Self {
+  pub fn parameter(self) -> Self {
     self.restyle(Style::new().fg(Cyan))
   }
 
-  pub(crate) fn message(self) -> Self {
+  pub fn message(self) -> Self {
     self.restyle(Style::new().bold())
   }
 
-  pub(crate) fn annotation(self) -> Self {
+  pub fn annotation(self) -> Self {
     self.restyle(Style::new().fg(Purple))
   }
 
-  pub(crate) fn string(self) -> Self {
+  pub fn string(self) -> Self {
     self.restyle(Style::new().fg(Green))
   }
 
-  pub(crate) fn diff_added(self) -> Self {
+  pub fn diff_added(self) -> Self {
     self.restyle(Style::new().fg(Green))
   }
 
-  pub(crate) fn diff_deleted(self) -> Self {
+  pub fn diff_deleted(self) -> Self {
     self.restyle(Style::new().fg(Red))
   }
 
-  pub(crate) fn active(&self) -> bool {
+  pub fn active(&self) -> bool {
     match self.use_color {
       UseColor::Always => true,
       UseColor::Never => false,
@@ -125,15 +125,15 @@ impl Color {
     }
   }
 
-  pub(crate) fn paint<'a>(&self, text: &'a str) -> ANSIGenericString<'a, str> {
+  pub fn paint<'a>(&self, text: &'a str) -> ANSIGenericString<'a, str> {
     self.effective_style().paint(text)
   }
 
-  pub(crate) fn prefix(&self) -> Prefix {
+  pub fn prefix(&self) -> Prefix {
     self.effective_style().prefix()
   }
 
-  pub(crate) fn suffix(&self) -> Suffix {
+  pub fn suffix(&self) -> Suffix {
     self.effective_style().suffix()
   }
 }

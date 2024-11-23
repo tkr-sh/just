@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub(crate) struct Suggestion<'src> {
-  pub(crate) name: &'src str,
-  pub(crate) target: Option<&'src str>,
+pub struct Suggestion<'src> {
+  pub name: &'src str,
+  pub target: Option<&'src str>,
 }
 
 impl<'src> Display for Suggestion<'src> {

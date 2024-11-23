@@ -2,15 +2,15 @@ use super::*;
 
 /// A single function parameter
 #[derive(PartialEq, Debug, Clone, Serialize)]
-pub(crate) struct Parameter<'src> {
+pub struct Parameter<'src> {
   /// An optional default expression
-  pub(crate) default: Option<Expression<'src>>,
+  pub default: Option<Expression<'src>>,
   /// Export parameter as environment variable
-  pub(crate) export: bool,
+  pub export: bool,
   /// The kind of parameter
-  pub(crate) kind: ParameterKind,
+  pub kind: ParameterKind,
   /// The parameter name
-  pub(crate) name: Name<'src>,
+  pub name: Name<'src>,
 }
 
 impl<'src> ColorDisplay for Parameter<'src> {

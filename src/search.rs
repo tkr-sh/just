@@ -1,13 +1,13 @@
 use {super::*, std::path::Component};
 
 const DEFAULT_JUSTFILE_NAME: &str = JUSTFILE_NAMES[0];
-pub(crate) const JUSTFILE_NAMES: [&str; 2] = ["justfile", ".justfile"];
+pub const JUSTFILE_NAMES: [&str; 2] = ["justfile", ".justfile"];
 const PROJECT_ROOT_CHILDREN: &[&str] = &[".bzr", ".git", ".hg", ".svn", "_darcs"];
 
 #[derive(Debug)]
-pub(crate) struct Search {
-  pub(crate) justfile: PathBuf,
-  pub(crate) working_directory: PathBuf,
+pub struct Search {
+  pub justfile: PathBuf,
+  pub working_directory: PathBuf,
 }
 
 impl Search {
@@ -35,7 +35,7 @@ impl Search {
   }
 
   /// Find justfile given search configuration and invocation directory
-  pub(crate) fn find(
+  pub fn find(
     search_config: &SearchConfig,
     invocation_directory: &Path,
   ) -> SearchResult<Self> {
@@ -77,7 +77,7 @@ impl Search {
   }
 
   /// Find justfile starting from parent directory of current justfile
-  pub(crate) fn search_parent_directory(&self) -> SearchResult<Self> {
+  pub fn search_parent_directory(&self) -> SearchResult<Self> {
     let parent = self
       .justfile
       .parent()
@@ -99,7 +99,7 @@ impl Search {
   }
 
   /// Get working directory and justfile path for newly-initialized justfile
-  pub(crate) fn init(
+  pub fn init(
     search_config: &SearchConfig,
     invocation_directory: &Path,
   ) -> SearchResult<Self> {

@@ -1,11 +1,11 @@
 #[derive(Copy, Clone)]
-pub(crate) struct Shebang<'line> {
-  pub(crate) interpreter: &'line str,
-  pub(crate) argument: Option<&'line str>,
+pub struct Shebang<'line> {
+  pub interpreter: &'line str,
+  pub argument: Option<&'line str>,
 }
 
 impl<'line> Shebang<'line> {
-  pub(crate) fn new(line: &'line str) -> Option<Self> {
+  pub fn new(line: &'line str) -> Option<Self> {
     if !line.starts_with("#!") {
       return None;
     }
@@ -38,7 +38,7 @@ impl<'line> Shebang<'line> {
       .unwrap_or(self.interpreter)
   }
 
-  pub(crate) fn include_shebang_line(&self) -> bool {
+  pub fn include_shebang_line(&self) -> bool {
     !(cfg!(windows) || matches!(self.interpreter_filename(), "cmd" | "cmd.exe"))
   }
 }

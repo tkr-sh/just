@@ -47,7 +47,7 @@ macro_rules! tree {
 
 /// A `Tree` is either…
 #[derive(Debug, PartialEq)]
-pub(crate) enum Tree<'text> {
+pub enum Tree<'text> {
   /// …an atom containing text, or…
   Atom(Cow<'text, str>),
   /// …a list containing zero or more `Tree`s.
@@ -56,22 +56,22 @@ pub(crate) enum Tree<'text> {
 
 impl<'text> Tree<'text> {
   /// Construct an Atom from a text scalar
-  pub(crate) fn atom(text: impl Into<Cow<'text, str>>) -> Self {
+  pub fn atom(text: impl Into<Cow<'text, str>>) -> Self {
     Self::Atom(text.into())
   }
 
   /// Construct a List from an iterable of trees
-  pub(crate) fn list(children: impl IntoIterator<Item = Self>) -> Self {
+  pub fn list(children: impl IntoIterator<Item = Self>) -> Self {
     Self::List(children.into_iter().collect())
   }
 
   /// Convenience function to create an atom containing quoted text
-  pub(crate) fn string(contents: impl AsRef<str>) -> Self {
+  pub fn string(contents: impl AsRef<str>) -> Self {
     Self::atom(format!("\"{}\"", contents.as_ref()))
   }
 
   /// Push a child node into self, turning it into a List if it was an Atom
-  pub(crate) fn push(self, tree: impl Into<Self>) -> Self {
+  pub fn push(self, tree: impl Into<Self>) -> Self {
     match self {
       Self::List(mut children) => {
         children.push(tree.into());
@@ -83,7 +83,7 @@ impl<'text> Tree<'text> {
 
   /// Extend a self with a tail of Trees, turning self into a List if it was an
   /// Atom
-  pub(crate) fn extend<I, T>(self, tail: I) -> Self
+  pub fn extend<I, T>(self, tail: I) -> Self
   where
     I: IntoIterator<Item = T>,
     T: Into<Self>,
@@ -102,7 +102,7 @@ impl<'text> Tree<'text> {
   }
 
   /// Like `push`, but modify self in-place
-  pub(crate) fn push_mut(&mut self, tree: impl Into<Self>) {
+  pub fn push_mut(&mut self, tree: impl Into<Self>) {
     *self = mem::replace(self, Self::List(Vec::new())).push(tree.into());
   }
 }

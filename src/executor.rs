@@ -1,12 +1,12 @@
 use super::*;
 
-pub(crate) enum Executor<'a> {
+pub enum Executor<'a> {
   Command(&'a Interpreter<'a>),
   Shebang(Shebang<'a>),
 }
 
 impl<'a> Executor<'a> {
-  pub(crate) fn command<'src>(
+  pub fn command<'src>(
     &self,
     path: &Path,
     recipe: &'src str,
@@ -46,7 +46,7 @@ impl<'a> Executor<'a> {
     }
   }
 
-  pub(crate) fn script_filename(&self, recipe: &str, extension: Option<&str>) -> String {
+  pub fn script_filename(&self, recipe: &str, extension: Option<&str>) -> String {
     let extension = extension.unwrap_or_else(|| {
       let interpreter = match self {
         Self::Command(interpreter) => &interpreter.command.cooked,
@@ -63,7 +63,7 @@ impl<'a> Executor<'a> {
     format!("{recipe}{extension}")
   }
 
-  pub(crate) fn error<'src>(&self, io_error: io::Error, recipe: &'src str) -> Error<'src> {
+  pub fn error<'src>(&self, io_error: io::Error, recipe: &'src str) -> Error<'src> {
     match self {
       Self::Command(Interpreter { command, arguments }) => {
         let mut command = command.cooked.clone();
@@ -90,7 +90,7 @@ impl<'a> Executor<'a> {
 
   // Script text for `recipe` given evaluated `lines` including blanks so line
   // numbers in errors from generated script match justfile source lines.
-  pub(crate) fn script<D>(&self, recipe: &Recipe<D>, lines: &[String]) -> String {
+  pub fn script<D>(&self, recipe: &Recipe<D>, lines: &[String]) -> String {
     let mut script = String::new();
     let mut n = 0;
     let shebangs = recipe

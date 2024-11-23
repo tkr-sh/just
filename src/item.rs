@@ -2,7 +2,7 @@ use super::*;
 
 /// A single top-level item
 #[derive(Debug, Clone)]
-pub(crate) enum Item<'src> {
+pub enum Item<'src> {
   Alias(Alias<'src, Name<'src>>),
   Assignment(Assignment<'src>),
   Comment(&'src str),

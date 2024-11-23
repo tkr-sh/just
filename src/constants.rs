@@ -30,7 +30,7 @@ const CONSTANTS: [(&str, &str, &str); 27] = [
   ("BG_WHITE", "\x1b[47m", "master"),
 ];
 
-pub(crate) fn constants() -> &'static HashMap<&'static str, &'static str> {
+pub fn constants() -> &'static HashMap<&'static str, &'static str> {
   static MAP: OnceLock<HashMap<&str, &str>> = OnceLock::new();
   MAP.get_or_init(|| {
     CONSTANTS

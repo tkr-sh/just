@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Debug)]
-pub(crate) enum OutputError {
+pub enum OutputError {
   /// Non-zero exit code
   Code(i32),
   /// IO error

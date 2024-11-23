@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) trait Keyed<'key> {
+pub trait Keyed<'key> {
   fn key(&self) -> &'key str;
 }
 
@@ -10,7 +10,7 @@ impl<'key, T: Keyed<'key>> Keyed<'key> for Rc<T> {
   }
 }
 
-pub(crate) fn serialize<'src, S, K>(keyed: &K, serializer: S) -> Result<S::Ok, S::Error>
+pub fn serialize<'src, S, K>(keyed: &K, serializer: S) -> Result<S::Ok, S::Error>
 where
   S: Serializer,
   K: Keyed<'src>,
@@ -18,7 +18,7 @@ where
   serializer.serialize_str(keyed.key())
 }
 
-pub(crate) fn serialize_option<'src, S, K>(
+pub fn serialize_option<'src, S, K>(
   recipe: &Option<K>,
   serializer: S,
 ) -> Result<S::Ok, S::Error>

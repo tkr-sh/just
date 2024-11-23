@@ -8,55 +8,55 @@ use {
 };
 
 #[derive(Debug, PartialEq)]
-pub(crate) struct Config {
-  pub(crate) check: bool,
-  pub(crate) color: Color,
-  pub(crate) command_color: Option<ansi_term::Color>,
-  pub(crate) dotenv_filename: Option<String>,
-  pub(crate) dotenv_path: Option<PathBuf>,
-  pub(crate) dry_run: bool,
-  pub(crate) dump_format: DumpFormat,
-  pub(crate) explain: bool,
-  pub(crate) highlight: bool,
-  pub(crate) invocation_directory: PathBuf,
-  pub(crate) list_heading: String,
-  pub(crate) list_prefix: String,
-  pub(crate) list_submodules: bool,
-  pub(crate) load_dotenv: bool,
-  pub(crate) no_aliases: bool,
-  pub(crate) no_dependencies: bool,
-  pub(crate) one: bool,
-  pub(crate) search_config: SearchConfig,
-  pub(crate) shell: Option<String>,
-  pub(crate) shell_args: Option<Vec<String>>,
-  pub(crate) shell_command: bool,
-  pub(crate) subcommand: Subcommand,
-  pub(crate) timestamp: bool,
-  pub(crate) timestamp_format: String,
-  pub(crate) unsorted: bool,
-  pub(crate) unstable: bool,
-  pub(crate) verbosity: Verbosity,
-  pub(crate) yes: bool,
+pub struct Config {
+  pub check: bool,
+  pub color: Color,
+  pub command_color: Option<ansi_term::Color>,
+  pub dotenv_filename: Option<String>,
+  pub dotenv_path: Option<PathBuf>,
+  pub dry_run: bool,
+  pub dump_format: DumpFormat,
+  pub explain: bool,
+  pub highlight: bool,
+  pub invocation_directory: PathBuf,
+  pub list_heading: String,
+  pub list_prefix: String,
+  pub list_submodules: bool,
+  pub load_dotenv: bool,
+  pub no_aliases: bool,
+  pub no_dependencies: bool,
+  pub one: bool,
+  pub search_config: SearchConfig,
+  pub shell: Option<String>,
+  pub shell_args: Option<Vec<String>>,
+  pub shell_command: bool,
+  pub subcommand: Subcommand,
+  pub timestamp: bool,
+  pub timestamp_format: String,
+  pub unsorted: bool,
+  pub unstable: bool,
+  pub verbosity: Verbosity,
+  pub yes: bool,
 }
 
 mod cmd {
-  pub(crate) const CHANGELOG: &str = "CHANGELOG";
-  pub(crate) const CHOOSE: &str = "CHOOSE";
-  pub(crate) const COMMAND: &str = "COMMAND";
-  pub(crate) const COMPLETIONS: &str = "COMPLETIONS";
-  pub(crate) const DUMP: &str = "DUMP";
-  pub(crate) const EDIT: &str = "EDIT";
-  pub(crate) const EVALUATE: &str = "EVALUATE";
-  pub(crate) const FORMAT: &str = "FORMAT";
-  pub(crate) const GROUPS: &str = "GROUPS";
-  pub(crate) const INIT: &str = "INIT";
-  pub(crate) const LIST: &str = "LIST";
-  pub(crate) const MAN: &str = "MAN";
-  pub(crate) const SHOW: &str = "SHOW";
-  pub(crate) const SUMMARY: &str = "SUMMARY";
-  pub(crate) const VARIABLES: &str = "VARIABLES";
+  pub const CHANGELOG: &str = "CHANGELOG";
+  pub const CHOOSE: &str = "CHOOSE";
+  pub const COMMAND: &str = "COMMAND";
+  pub const COMPLETIONS: &str = "COMPLETIONS";
+  pub const DUMP: &str = "DUMP";
+  pub const EDIT: &str = "EDIT";
+  pub const EVALUATE: &str = "EVALUATE";
+  pub const FORMAT: &str = "FORMAT";
+  pub const GROUPS: &str = "GROUPS";
+  pub const INIT: &str = "INIT";
+  pub const LIST: &str = "LIST";
+  pub const MAN: &str = "MAN";
+  pub const SHOW: &str = "SHOW";
+  pub const SUMMARY: &str = "SUMMARY";
+  pub const VARIABLES: &str = "VARIABLES";
 
-  pub(crate) const ALL: &[&str] = &[
+  pub const ALL: &[&str] = &[
     CHANGELOG,
     CHOOSE,
     COMMAND,
@@ -73,51 +73,51 @@ mod cmd {
     VARIABLES,
   ];
 
-  pub(crate) const ARGLESS: &[&str] =
+  pub const ARGLESS: &[&str] =
     &[CHANGELOG, DUMP, EDIT, FORMAT, INIT, MAN, SUMMARY, VARIABLES];
 
-  pub(crate) const HEADING: &str = "Commands";
+  pub const HEADING: &str = "Commands";
 }
 
 mod arg {
-  pub(crate) const ARGUMENTS: &str = "ARGUMENTS";
-  pub(crate) const CHECK: &str = "CHECK";
-  pub(crate) const CHOOSER: &str = "CHOOSER";
-  pub(crate) const CLEAR_SHELL_ARGS: &str = "CLEAR-SHELL-ARGS";
-  pub(crate) const COLOR: &str = "COLOR";
-  pub(crate) const COMMAND_COLOR: &str = "COMMAND-COLOR";
-  pub(crate) const DOTENV_FILENAME: &str = "DOTENV-FILENAME";
-  pub(crate) const DOTENV_PATH: &str = "DOTENV-PATH";
-  pub(crate) const DRY_RUN: &str = "DRY-RUN";
-  pub(crate) const DUMP_FORMAT: &str = "DUMP-FORMAT";
-  pub(crate) const EXPLAIN: &str = "EXPLAIN";
-  pub(crate) const GLOBAL_JUSTFILE: &str = "GLOBAL-JUSTFILE";
-  pub(crate) const HIGHLIGHT: &str = "HIGHLIGHT";
-  pub(crate) const JUSTFILE: &str = "JUSTFILE";
-  pub(crate) const LIST_HEADING: &str = "LIST-HEADING";
-  pub(crate) const LIST_PREFIX: &str = "LIST-PREFIX";
-  pub(crate) const LIST_SUBMODULES: &str = "LIST-SUBMODULES";
-  pub(crate) const NO_ALIASES: &str = "NO-ALIASES";
-  pub(crate) const NO_DEPS: &str = "NO-DEPS";
-  pub(crate) const NO_DOTENV: &str = "NO-DOTENV";
-  pub(crate) const NO_HIGHLIGHT: &str = "NO-HIGHLIGHT";
-  pub(crate) const ONE: &str = "ONE";
-  pub(crate) const QUIET: &str = "QUIET";
-  pub(crate) const SET: &str = "SET";
-  pub(crate) const SHELL: &str = "SHELL";
-  pub(crate) const SHELL_ARG: &str = "SHELL-ARG";
-  pub(crate) const SHELL_COMMAND: &str = "SHELL-COMMAND";
-  pub(crate) const TIMESTAMP: &str = "TIMESTAMP";
-  pub(crate) const TIMESTAMP_FORMAT: &str = "TIMESTAMP-FORMAT";
-  pub(crate) const UNSORTED: &str = "UNSORTED";
-  pub(crate) const UNSTABLE: &str = "UNSTABLE";
-  pub(crate) const VERBOSE: &str = "VERBOSE";
-  pub(crate) const WORKING_DIRECTORY: &str = "WORKING-DIRECTORY";
-  pub(crate) const YES: &str = "YES";
+  pub const ARGUMENTS: &str = "ARGUMENTS";
+  pub const CHECK: &str = "CHECK";
+  pub const CHOOSER: &str = "CHOOSER";
+  pub const CLEAR_SHELL_ARGS: &str = "CLEAR-SHELL-ARGS";
+  pub const COLOR: &str = "COLOR";
+  pub const COMMAND_COLOR: &str = "COMMAND-COLOR";
+  pub const DOTENV_FILENAME: &str = "DOTENV-FILENAME";
+  pub const DOTENV_PATH: &str = "DOTENV-PATH";
+  pub const DRY_RUN: &str = "DRY-RUN";
+  pub const DUMP_FORMAT: &str = "DUMP-FORMAT";
+  pub const EXPLAIN: &str = "EXPLAIN";
+  pub const GLOBAL_JUSTFILE: &str = "GLOBAL-JUSTFILE";
+  pub const HIGHLIGHT: &str = "HIGHLIGHT";
+  pub const JUSTFILE: &str = "JUSTFILE";
+  pub const LIST_HEADING: &str = "LIST-HEADING";
+  pub const LIST_PREFIX: &str = "LIST-PREFIX";
+  pub const LIST_SUBMODULES: &str = "LIST-SUBMODULES";
+  pub const NO_ALIASES: &str = "NO-ALIASES";
+  pub const NO_DEPS: &str = "NO-DEPS";
+  pub const NO_DOTENV: &str = "NO-DOTENV";
+  pub const NO_HIGHLIGHT: &str = "NO-HIGHLIGHT";
+  pub const ONE: &str = "ONE";
+  pub const QUIET: &str = "QUIET";
+  pub const SET: &str = "SET";
+  pub const SHELL: &str = "SHELL";
+  pub const SHELL_ARG: &str = "SHELL-ARG";
+  pub const SHELL_COMMAND: &str = "SHELL-COMMAND";
+  pub const TIMESTAMP: &str = "TIMESTAMP";
+  pub const TIMESTAMP_FORMAT: &str = "TIMESTAMP-FORMAT";
+  pub const UNSORTED: &str = "UNSORTED";
+  pub const UNSTABLE: &str = "UNSTABLE";
+  pub const VERBOSE: &str = "VERBOSE";
+  pub const WORKING_DIRECTORY: &str = "WORKING-DIRECTORY";
+  pub const YES: &str = "YES";
 }
 
 impl Config {
-  pub(crate) fn app() -> Command {
+  pub fn app() -> Command {
     Command::new(env!("CARGO_PKG_NAME"))
       .bin_name(env!("CARGO_PKG_NAME"))
       .version(env!("CARGO_PKG_VERSION"))
@@ -592,7 +592,7 @@ impl Config {
     }
   }
 
-  pub(crate) fn from_matches(matches: &ArgMatches) -> ConfigResult<Self> {
+  pub fn from_matches(matches: &ArgMatches) -> ConfigResult<Self> {
     let mut overrides = BTreeMap::new();
     if let Some(mut values) = matches.get_many::<String>(arg::SET) {
       while let (Some(k), Some(v)) = (values.next(), values.next()) {
@@ -758,7 +758,7 @@ impl Config {
     })
   }
 
-  pub(crate) fn require_unstable(
+  pub fn require_unstable(
     &self,
     justfile: &Justfile,
     unstable_feature: UnstableFeature,

@@ -8,7 +8,7 @@ fn backtick_re() -> &'static Regex {
 }
 
 #[derive(PartialEq, Clone, Debug)]
-pub(crate) enum Subcommand {
+pub enum Subcommand {
   Changelog,
   Choose {
     overrides: BTreeMap<String, String>,
@@ -47,7 +47,7 @@ pub(crate) enum Subcommand {
 }
 
 impl Subcommand {
-  pub(crate) fn execute<'src>(&self, config: &Config, loader: &'src Loader) -> RunResult<'src> {
+  pub fn execute<'src>(&self, config: &Config, loader: &'src Loader) -> RunResult<'src> {
     use Subcommand::*;
 
     match self {

@@ -1,12 +1,9 @@
 use super::*;
 
-pub(crate) struct Compiler;
+pub struct Compiler;
 
 impl Compiler {
-  pub(crate) fn compile<'src>(
-    loader: &'src Loader,
-    root: &Path,
-  ) -> RunResult<'src, Compilation<'src>> {
+  pub fn compile<'src>(loader: &'src Loader, root: &Path) -> RunResult<'src, Compilation<'src>> {
     let mut asts = HashMap::<PathBuf, Ast>::new();
     let mut loaded = Vec::new();
     let mut paths = HashMap::<PathBuf, PathBuf>::new();
@@ -211,7 +208,7 @@ impl Compiler {
   }
 
   #[cfg(test)]
-  pub(crate) fn test_compile(src: &str) -> CompileResult<Justfile> {
+  pub fn test_compile(src: &str) -> CompileResult<Justfile> {
     let tokens = Lexer::test_lex(src)?;
     let ast = Parser::parse(0, &[], &Namepath::default(), &tokens, &PathBuf::new())?;
     let root = PathBuf::from("justfile");

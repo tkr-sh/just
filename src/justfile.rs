@@ -9,28 +9,28 @@ struct Invocation<'src: 'run, 'run> {
 }
 
 #[derive(Debug, PartialEq, Serialize)]
-pub(crate) struct Justfile<'src> {
-  pub(crate) aliases: Table<'src, Alias<'src>>,
-  pub(crate) assignments: Table<'src, Assignment<'src>>,
-  pub(crate) doc: Option<String>,
+pub struct Justfile<'src> {
+  pub aliases: Table<'src, Alias<'src>>,
+  pub assignments: Table<'src, Assignment<'src>>,
+  pub doc: Option<String>,
   #[serde(rename = "first", serialize_with = "keyed::serialize_option")]
-  pub(crate) default: Option<Rc<Recipe<'src>>>,
+  pub default: Option<Rc<Recipe<'src>>>,
   #[serde(skip)]
-  pub(crate) loaded: Vec<PathBuf>,
-  pub(crate) groups: Vec<String>,
-  pub(crate) modules: Table<'src, Justfile<'src>>,
+  pub loaded: Vec<PathBuf>,
+  pub groups: Vec<String>,
+  pub modules: Table<'src, Justfile<'src>>,
   #[serde(skip)]
-  pub(crate) name: Option<Name<'src>>,
-  pub(crate) recipes: Table<'src, Rc<Recipe<'src>>>,
-  pub(crate) settings: Settings<'src>,
+  pub name: Option<Name<'src>>,
+  pub recipes: Table<'src, Rc<Recipe<'src>>>,
+  pub settings: Settings<'src>,
   #[serde(skip)]
-  pub(crate) source: PathBuf,
-  pub(crate) unexports: HashSet<String>,
+  pub source: PathBuf,
+  pub unexports: HashSet<String>,
   #[serde(skip)]
-  pub(crate) unstable_features: BTreeSet<UnstableFeature>,
-  pub(crate) warnings: Vec<Warning>,
+  pub unstable_features: BTreeSet<UnstableFeature>,
+  pub warnings: Vec<Warning>,
   #[serde(skip)]
-  pub(crate) working_directory: PathBuf,
+  pub working_directory: PathBuf,
 }
 
 impl<'src> Justfile<'src> {
@@ -45,7 +45,7 @@ impl<'src> Justfile<'src> {
       .map(|(_distance, suggestion)| suggestion)
   }
 
-  pub(crate) fn suggest_recipe(&self, input: &str) -> Option<Suggestion<'src>> {
+  pub fn suggest_recipe(&self, input: &str) -> Option<Suggestion<'src>> {
     Self::find_suggestion(
       input,
       self
@@ -59,7 +59,7 @@ impl<'src> Justfile<'src> {
     )
   }
 
-  pub(crate) fn suggest_variable(&self, input: &str) -> Option<Suggestion<'src>> {
+  pub fn suggest_variable(&self, input: &str) -> Option<Suggestion<'src>> {
     Self::find_suggestion(
       input,
       self
@@ -69,7 +69,7 @@ impl<'src> Justfile<'src> {
     )
   }
 
-  pub(crate) fn run(
+  pub fn run(
     &self,
     config: &Config,
     search: &Search,
@@ -221,7 +221,7 @@ impl<'src> Justfile<'src> {
     Ok(())
   }
 
-  pub(crate) fn check_unstable(&self, config: &Config) -> RunResult<'src> {
+  pub fn check_unstable(&self, config: &Config) -> RunResult<'src> {
     if let Some(&unstable_feature) = self.unstable_features.iter().next() {
       config.require_unstable(self, unstable_feature)?;
     }
@@ -233,11 +233,11 @@ impl<'src> Justfile<'src> {
     Ok(())
   }
 
-  pub(crate) fn get_alias(&self, name: &str) -> Option<&Alias<'src>> {
+  pub fn get_alias(&self, name: &str) -> Option<&Alias<'src>> {
     self.aliases.get(name)
   }
 
-  pub(crate) fn get_recipe(&self, name: &str) -> Option<&Recipe<'src>> {
+  pub fn get_recipe(&self, name: &str) -> Option<&Recipe<'src>> {
     self
       .recipes
       .get(name)
@@ -298,11 +298,11 @@ impl<'src> Justfile<'src> {
     }
   }
 
-  pub(crate) fn is_submodule(&self) -> bool {
+  pub fn is_submodule(&self) -> bool {
     self.name.is_some()
   }
 
-  pub(crate) fn name(&self) -> &'src str {
+  pub fn name(&self) -> &'src str {
     self.name.map(|name| name.lexeme()).unwrap_or_default()
   }
 
@@ -362,7 +362,7 @@ impl<'src> Justfile<'src> {
     Ok(())
   }
 
-  pub(crate) fn modules(&self, config: &Config) -> Vec<&Justfile> {
+  pub fn modules(&self, config: &Config) -> Vec<&Justfile> {
     let mut modules = self.modules.values().collect::<Vec<&Justfile>>();
 
     if config.unsorted {
@@ -377,7 +377,7 @@ impl<'src> Justfile<'src> {
     modules
   }
 
-  pub(crate) fn public_recipes(&self, config: &Config) -> Vec<&Recipe> {
+  pub fn public_recipes(&self, config: &Config) -> Vec<&Recipe> {
     let mut recipes = self
       .recipes
       .values()
@@ -392,11 +392,11 @@ impl<'src> Justfile<'src> {
     recipes
   }
 
-  pub(crate) fn groups(&self) -> &[String] {
+  pub fn groups(&self) -> &[String] {
     &self.groups
   }
 
-  pub(crate) fn public_groups(&self, config: &Config) -> Vec<String> {
+  pub fn public_groups(&self, config: &Config) -> Vec<String> {
     let mut groups = Vec::new();
 
     for recipe in self.recipes.values() {

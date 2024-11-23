@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) struct Platform;
+pub struct Platform;
 
 #[cfg(unix)]
 impl PlatformInterface for Platform {

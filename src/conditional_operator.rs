@@ -2,7 +2,7 @@ use super::*;
 
 /// A conditional expression operator.
 #[derive(PartialEq, Debug, Copy, Clone)]
-pub(crate) enum ConditionalOperator {
+pub enum ConditionalOperator {
   /// `==`
   Equality,
   /// `!=`

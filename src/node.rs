@@ -1,7 +1,7 @@
 use super::*;
 
 /// Methods common to all AST nodes. Currently only used in parser unit tests.
-pub(crate) trait Node<'src> {
+pub trait Node<'src> {
   /// Construct an untyped tree of atoms representing this Node. This function,
   /// and `Tree` type, are only used in parser unit tests.
   fn tree(&self) -> Tree<'src>;

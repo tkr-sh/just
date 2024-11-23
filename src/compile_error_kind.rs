@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Debug, PartialEq)]
-pub(crate) enum CompileErrorKind<'src> {
+pub enum CompileErrorKind<'src> {
   AttributeArgumentCountMismatch {
     attribute: &'src str,
     found: usize,

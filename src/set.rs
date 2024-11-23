@@ -1,9 +1,9 @@
 use super::*;
 
 #[derive(Debug, Clone)]
-pub(crate) struct Set<'src> {
-  pub(crate) name: Name<'src>,
-  pub(crate) value: Setting<'src>,
+pub struct Set<'src> {
+  pub name: Name<'src>,
+  pub value: Setting<'src>,
 }
 
 impl<'src> Keyed<'src> for Set<'src> {

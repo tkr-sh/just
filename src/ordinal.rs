@@ -1,4 +1,4 @@
-pub(crate) trait Ordinal {
+pub trait Ordinal {
   /// Convert an index starting at 0 to an ordinal starting at 1
   fn ordinal(self) -> Self;
 }

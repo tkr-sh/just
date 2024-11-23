@@ -2,7 +2,7 @@ use super::*;
 
 #[derive(Debug, Eq, PartialEq, IntoStaticStr, Display, Copy, Clone, EnumString)]
 #[strum(serialize_all = "kebab_case")]
-pub(crate) enum Keyword {
+pub enum Keyword {
   Alias,
   AllowDuplicateRecipes,
   AllowDuplicateVariables,
@@ -35,11 +35,11 @@ pub(crate) enum Keyword {
 }
 
 impl Keyword {
-  pub(crate) fn from_lexeme(lexeme: &str) -> Option<Keyword> {
+  pub fn from_lexeme(lexeme: &str) -> Option<Keyword> {
     lexeme.parse().ok()
   }
 
-  pub(crate) fn lexeme(self) -> &'static str {
+  pub fn lexeme(self) -> &'static str {
     self.into()
   }
 }

@@ -18,30 +18,30 @@ fn error_from_signal(recipe: &str, line_number: Option<usize>, exit_status: Exit
 
 /// A recipe, e.g. `foo: bar baz`
 #[derive(PartialEq, Debug, Clone, Serialize)]
-pub(crate) struct Recipe<'src, D = Dependency<'src>> {
-  pub(crate) attributes: BTreeSet<Attribute<'src>>,
-  pub(crate) body: Vec<Line<'src>>,
-  pub(crate) dependencies: Vec<D>,
-  pub(crate) doc: Option<String>,
+pub struct Recipe<'src, D = Dependency<'src>> {
+  pub attributes: BTreeSet<Attribute<'src>>,
+  pub body: Vec<Line<'src>>,
+  pub dependencies: Vec<D>,
+  pub doc: Option<String>,
   #[serde(skip)]
-  pub(crate) file_depth: u32,
+  pub file_depth: u32,
   #[serde(skip)]
-  pub(crate) import_offsets: Vec<usize>,
-  pub(crate) name: Name<'src>,
-  pub(crate) namepath: Namepath<'src>,
-  pub(crate) parameters: Vec<Parameter<'src>>,
-  pub(crate) priors: usize,
-  pub(crate) private: bool,
-  pub(crate) quiet: bool,
-  pub(crate) shebang: bool,
+  pub import_offsets: Vec<usize>,
+  pub name: Name<'src>,
+  pub namepath: Namepath<'src>,
+  pub parameters: Vec<Parameter<'src>>,
+  pub priors: usize,
+  pub private: bool,
+  pub quiet: bool,
+  pub shebang: bool,
 }
 
 impl<'src, D> Recipe<'src, D> {
-  pub(crate) fn argument_range(&self) -> RangeInclusive<usize> {
+  pub fn argument_range(&self) -> RangeInclusive<usize> {
     self.min_arguments()..=self.max_arguments()
   }
 
-  pub(crate) fn min_arguments(&self) -> usize {
+  pub fn min_arguments(&self) -> usize {
     self
       .parameters
       .iter()
@@ -49,7 +49,7 @@ impl<'src, D> Recipe<'src, D> {
       .count()
   }
 
-  pub(crate) fn max_arguments(&self) -> usize {
+  pub fn max_arguments(&self) -> usize {
     if self.parameters.iter().any(|p| p.kind.is_variadic()) {
       usize::MAX - 1
     } else {
@@ -57,15 +57,15 @@ impl<'src, D> Recipe<'src, D> {
     }
   }
 
-  pub(crate) fn name(&self) -> &'src str {
+  pub fn name(&self) -> &'src str {
     self.name.lexeme()
   }
 
-  pub(crate) fn line_number(&self) -> usize {
+  pub fn line_number(&self) -> usize {
     self.name.line
   }
 
-  pub(crate) fn confirm(&self) -> RunResult<'src, bool> {
+  pub fn confirm(&self) -> RunResult<'src, bool> {
     for attribute in &self.attributes {
       if let Attribute::Confirm(prompt) = attribute {
         if let Some(prompt) = prompt {
@@ -84,7 +84,7 @@ impl<'src, D> Recipe<'src, D> {
     Ok(true)
   }
 
-  pub(crate) fn check_can_be_default_recipe(&self) -> RunResult<'src, ()> {
+  pub fn check_can_be_default_recipe(&self) -> RunResult<'src, ()> {
     let min_arguments = self.min_arguments();
     if min_arguments > 0 {
       return Err(Error::DefaultRecipeRequiresArguments {
@@ -96,23 +96,23 @@ impl<'src, D> Recipe<'src, D> {
     Ok(())
   }
 
-  pub(crate) fn is_public(&self) -> bool {
+  pub fn is_public(&self) -> bool {
     !self.private && !self.attributes.contains(&Attribute::Private)
   }
 
-  pub(crate) fn is_script(&self) -> bool {
+  pub fn is_script(&self) -> bool {
     self.shebang
   }
 
-  pub(crate) fn takes_positional_arguments(&self, settings: &Settings) -> bool {
+  pub fn takes_positional_arguments(&self, settings: &Settings) -> bool {
     settings.positional_arguments || self.attributes.contains(&Attribute::PositionalArguments)
   }
 
-  pub(crate) fn change_directory(&self) -> bool {
+  pub fn change_directory(&self) -> bool {
     !self.attributes.contains(&Attribute::NoCd)
   }
 
-  pub(crate) fn enabled(&self) -> bool {
+  pub fn enabled(&self) -> bool {
     let windows = self.attributes.contains(&Attribute::Windows);
     let linux = self.attributes.contains(&Attribute::Linux);
     let macos = self.attributes.contains(&Attribute::Macos);
@@ -142,7 +142,7 @@ impl<'src, D> Recipe<'src, D> {
     self.attributes.contains(&Attribute::NoQuiet)
   }
 
-  pub(crate) fn run<'run>(
+  pub fn run<'run>(
     &self,
     context: &ExecutionContext<'src, 'run>,
     scope: &Scope<'src, 'run>,
@@ -311,7 +311,7 @@ impl<'src, D> Recipe<'src, D> {
     }
   }
 
-  pub(crate) fn run_script<'run>(
+  pub fn run_script<'run>(
     &self,
     context: &ExecutionContext<'src, 'run>,
     scope: &Scope<'src, 'run>,
@@ -445,7 +445,7 @@ impl<'src, D> Recipe<'src, D> {
     }
   }
 
-  pub(crate) fn groups(&self) -> BTreeSet<String> {
+  pub fn groups(&self) -> BTreeSet<String> {
     self
       .attributes
       .iter()
@@ -459,7 +459,7 @@ impl<'src, D> Recipe<'src, D> {
       .collect()
   }
 
-  pub(crate) fn doc(&self) -> Option<&str> {
+  pub fn doc(&self) -> Option<&str> {
     for attribute in &self.attributes {
       if let Attribute::Doc(doc) = attribute {
         return doc.as_ref().map(|s| s.cooked.as_ref());
@@ -469,7 +469,7 @@ impl<'src, D> Recipe<'src, D> {
     self.doc.as_deref()
   }
 
-  pub(crate) fn subsequents(&self) -> impl Iterator<Item = &D> {
+  pub fn subsequents(&self) -> impl Iterator<Item = &D> {
     self.dependencies.iter().skip(self.priors)
   }
 }

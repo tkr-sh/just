@@ -1,19 +1,19 @@
 use super::*;
 
-pub(crate) struct InterruptHandler {
+pub struct InterruptHandler {
   blocks: u32,
   interrupted: bool,
   verbosity: Verbosity,
 }
 
 impl InterruptHandler {
-  pub(crate) fn install(verbosity: Verbosity) -> Result<(), ctrlc::Error> {
+  pub fn install(verbosity: Verbosity) -> Result<(), ctrlc::Error> {
     let mut instance = Self::instance();
     instance.verbosity = verbosity;
     ctrlc::set_handler(|| Self::instance().interrupt())
   }
 
-  pub(crate) fn instance() -> MutexGuard<'static, Self> {
+  pub fn instance() -> MutexGuard<'static, Self> {
     static INSTANCE: Mutex<InterruptHandler> = Mutex::new(InterruptHandler::new());
 
     match INSTANCE.lock() {
@@ -53,11 +53,11 @@ impl InterruptHandler {
     process::exit(130);
   }
 
-  pub(crate) fn block(&mut self) {
+  pub fn block(&mut self) {
     self.blocks += 1;
   }
 
-  pub(crate) fn unblock(&mut self) {
+  pub fn unblock(&mut self) {
     if self.blocks == 0 {
       if self.verbosity.loud() {
         eprintln!(
@@ -79,7 +79,7 @@ impl InterruptHandler {
     }
   }
 
-  pub(crate) fn guard<T, F: FnOnce() -> T>(function: F) -> T {
+  pub fn guard<T, F: FnOnce() -> T>(function: F) -> T {
     let _guard = InterruptGuard::new();
     function()
   }

@@ -1,10 +1,10 @@
 use super::*;
 
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) struct Condition<'src> {
-  pub(crate) lhs: Box<Expression<'src>>,
-  pub(crate) rhs: Box<Expression<'src>>,
-  pub(crate) operator: ConditionalOperator,
+pub struct Condition<'src> {
+  pub lhs: Box<Expression<'src>>,
+  pub rhs: Box<Expression<'src>>,
+  pub operator: ConditionalOperator,
 }
 
 impl<'src> Display for Condition<'src> {

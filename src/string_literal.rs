@@ -1,15 +1,15 @@
 use super::*;
 
 #[derive(PartialEq, Debug, Clone, Ord, Eq, PartialOrd)]
-pub(crate) struct StringLiteral<'src> {
-  pub(crate) cooked: String,
-  pub(crate) expand: bool,
-  pub(crate) kind: StringKind,
-  pub(crate) raw: &'src str,
+pub struct StringLiteral<'src> {
+  pub cooked: String,
+  pub expand: bool,
+  pub kind: StringKind,
+  pub raw: &'src str,
 }
 
 impl<'src> StringLiteral<'src> {
-  pub(crate) fn from_raw(raw: &'src str) -> Self {
+  pub fn from_raw(raw: &'src str) -> Self {
     Self {
       cooked: raw.into(),
       expand: false,

@@ -1,4 +1,4 @@
-pub(crate) use {
+pub use {
   crate::{
     assert_stdout::assert_stdout,
     assert_success::assert_success,

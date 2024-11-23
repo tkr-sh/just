@@ -1,9 +1,9 @@
 use super::*;
 
-pub(crate) type UnresolvedRecipe<'src> = Recipe<'src, UnresolvedDependency<'src>>;
+pub type UnresolvedRecipe<'src> = Recipe<'src, UnresolvedDependency<'src>>;
 
 impl<'src> UnresolvedRecipe<'src> {
-  pub(crate) fn resolve(
+  pub fn resolve(
     self,
     resolved: Vec<Rc<Recipe<'src>>>,
   ) -> CompileResult<'src, Recipe<'src>> {

@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Copy, Clone, Debug, PartialEq, Ord, Eq, PartialOrd)]
-pub(crate) enum UnstableFeature {
+pub enum UnstableFeature {
   FormatSubcommand,
   LogicalOperators,
   ScriptAttribute,

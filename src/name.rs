@@ -3,12 +3,12 @@ use super::*;
 /// A name. This is just a `Token` of kind `Identifier`, but we give it its own
 /// type for clarity.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
-pub(crate) struct Name<'src> {
-  pub(crate) token: Token<'src>,
+pub struct Name<'src> {
+  pub token: Token<'src>,
 }
 
 impl<'src> Name<'src> {
-  pub(crate) fn from_identifier(token: Token<'src>) -> Self {
+  pub fn from_identifier(token: Token<'src>) -> Self {
     assert_eq!(token.kind, TokenKind::Identifier);
     Self { token }
   }

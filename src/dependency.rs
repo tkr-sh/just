@@ -1,10 +1,10 @@
 use super::*;
 
 #[derive(PartialEq, Debug, Serialize)]
-pub(crate) struct Dependency<'src> {
-  pub(crate) arguments: Vec<Expression<'src>>,
+pub struct Dependency<'src> {
+  pub arguments: Vec<Expression<'src>>,
   #[serde(serialize_with = "keyed::serialize")]
-  pub(crate) recipe: Rc<Recipe<'src>>,
+  pub recipe: Rc<Recipe<'src>>,
 }
 
 impl<'src> Display for Dependency<'src> {

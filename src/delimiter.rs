@@ -1,12 +1,12 @@
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
-pub(crate) enum Delimiter {
+pub enum Delimiter {
   Brace,
   Bracket,
   Paren,
 }
 
 impl Delimiter {
-  pub(crate) fn open(self) -> char {
+  pub fn open(self) -> char {
     match self {
       Self::Brace => '{',
       Self::Bracket => '[',
@@ -14,7 +14,7 @@ impl Delimiter {
     }
   }
 
-  pub(crate) fn close(self) -> char {
+  pub fn close(self) -> char {
     match self {
       Self::Brace => '}',
       Self::Bracket => ']',

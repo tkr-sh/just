@@ -1,19 +1,19 @@
 use super::*;
 
-pub(crate) struct Loader {
+pub struct Loader {
   srcs: Arena<String>,
   paths: Arena<PathBuf>,
 }
 
 impl Loader {
-  pub(crate) fn new() -> Self {
+  pub fn new() -> Self {
     Self {
       srcs: Arena::new(),
       paths: Arena::new(),
     }
   }
 
-  pub(crate) fn load<'src>(
+  pub fn load<'src>(
     &'src self,
     root: &Path,
     path: &Path,

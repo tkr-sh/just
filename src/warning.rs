@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Clone, Debug, PartialEq)]
-pub(crate) enum Warning {}
+pub enum Warning {}
 
 impl Warning {
   #[allow(clippy::unused_self)]

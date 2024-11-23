@@ -1,8 +1,8 @@
 use super::*;
 
 #[derive(Debug, Snafu)]
-#[snafu(visibility(pub(crate)), context(suffix(Context)))]
-pub(crate) enum ConfigError {
+#[snafu(visibility(pub), context(suffix(Context)))]
+pub enum ConfigError {
   #[snafu(display("Failed to get current directory: {}", source))]
   CurrentDir { source: io::Error },
   #[snafu(display(
@@ -49,7 +49,7 @@ pub(crate) enum ConfigError {
 }
 
 impl ConfigError {
-  pub(crate) fn internal(message: impl Into<String>) -> Self {
+  pub fn internal(message: impl Into<String>) -> Self {
     Self::Internal {
       message: message.into(),
     }

@@ -1,6 +1,6 @@
 use super::*;
 
-pub(crate) trait RangeExt<T> {
+pub trait RangeExt<T> {
   fn range_contains(&self, i: &T) -> bool;
 
   fn display(&self) -> DisplayRange<&Self> {
@@ -8,7 +8,7 @@ pub(crate) trait RangeExt<T> {
   }
 }
 
-pub(crate) struct DisplayRange<T>(T);
+pub struct DisplayRange<T>(T);
 
 impl Display for DisplayRange<&RangeInclusive<usize>> {
   fn fmt(&self, f: &mut Formatter) -> fmt::Result {

@@ -1,22 +1,22 @@
 use super::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
-pub(crate) struct Token<'src> {
-  pub(crate) column: usize,
-  pub(crate) kind: TokenKind,
-  pub(crate) length: usize,
-  pub(crate) line: usize,
-  pub(crate) offset: usize,
-  pub(crate) path: &'src Path,
-  pub(crate) src: &'src str,
+pub struct Token<'src> {
+  pub column: usize,
+  pub kind: TokenKind,
+  pub length: usize,
+  pub line: usize,
+  pub offset: usize,
+  pub path: &'src Path,
+  pub src: &'src str,
 }
 
 impl<'src> Token<'src> {
-  pub(crate) fn lexeme(&self) -> &'src str {
+  pub fn lexeme(&self) -> &'src str {
     &self.src[self.offset..self.offset + self.length]
   }
 
-  pub(crate) fn error(&self, kind: CompileErrorKind<'src>) -> CompileError<'src> {
+  pub fn error(&self, kind: CompileErrorKind<'src>) -> CompileError<'src> {
     CompileError::new(*self, kind)
   }
 }

@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(Debug, PartialEq, Clone, Copy, Ord, PartialOrd, Eq)]
-pub(crate) enum TokenKind {
+pub enum TokenKind {
   AmpersandAmpersand,
   Asterisk,
   At,

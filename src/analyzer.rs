@@ -1,7 +1,7 @@
 use {super::*, CompileErrorKind::*};
 
 #[derive(Default)]
-pub(crate) struct Analyzer<'run, 'src> {
+pub struct Analyzer<'run, 'src> {
   aliases: Table<'src, Alias<'src, Name<'src>>>,
   assignments: Vec<&'run Binding<'src, Expression<'src>>>,
   modules: Table<'src, Justfile<'src>>,
@@ -12,7 +12,7 @@ pub(crate) struct Analyzer<'run, 'src> {
 }
 
 impl<'run, 'src> Analyzer<'run, 'src> {
-  pub(crate) fn analyze(
+  pub fn analyze(
     asts: &'run HashMap<PathBuf, Ast<'src>>,
     doc: Option<String>,
     groups: &[String],

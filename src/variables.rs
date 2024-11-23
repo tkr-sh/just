@@ -1,11 +1,11 @@
 use super::*;
 
-pub(crate) struct Variables<'expression, 'src> {
+pub struct Variables<'expression, 'src> {
   stack: Vec<&'expression Expression<'src>>,
 }
 
 impl<'expression, 'src> Variables<'expression, 'src> {
-  pub(crate) fn new(root: &'expression Expression<'src>) -> Self {
+  pub fn new(root: &'expression Expression<'src>) -> Self {
     Self { stack: vec![root] }
   }
 }

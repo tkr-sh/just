@@ -1,8 +1,8 @@
 use super::*;
 
 #[derive(Debug, Snafu)]
-#[snafu(visibility(pub(crate)))]
-pub(crate) enum SearchError {
+#[snafu(visibility(pub))]
+pub enum SearchError {
   #[snafu(display("Cannot initialize global justfile"))]
   GlobalJustfileInit,
   #[snafu(display("Global justfile not found"))]

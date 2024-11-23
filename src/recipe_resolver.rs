@@ -1,13 +1,13 @@
 use {super::*, CompileErrorKind::*};
 
-pub(crate) struct RecipeResolver<'src: 'run, 'run> {
+pub struct RecipeResolver<'src: 'run, 'run> {
   unresolved_recipes: Table<'src, UnresolvedRecipe<'src>>,
   resolved_recipes: Table<'src, Rc<Recipe<'src>>>,
   assignments: &'run Table<'src, Assignment<'src>>,
 }
 
 impl<'src: 'run, 'run> RecipeResolver<'src, 'run> {
-  pub(crate) fn resolve_recipes(
+  pub fn resolve_recipes(
     assignments: &'run Table<'src, Assignment<'src>>,
     settings: &Settings,
     unresolved_recipes: Table<'src, UnresolvedRecipe<'src>>,

@@ -4,11 +4,11 @@ use super::*;
 /// in valid justfiles, so additional consistency checks and name resolution
 /// are performed by the `Analyzer`, which produces a `Justfile` from an `Ast`.
 #[derive(Debug, Clone)]
-pub(crate) struct Ast<'src> {
-  pub(crate) items: Vec<Item<'src>>,
-  pub(crate) unstable_features: BTreeSet<UnstableFeature>,
-  pub(crate) warnings: Vec<Warning>,
-  pub(crate) working_directory: PathBuf,
+pub struct Ast<'src> {
+  pub items: Vec<Item<'src>>,
+  pub unstable_features: BTreeSet<UnstableFeature>,
+  pub warnings: Vec<Warning>,
+  pub working_directory: PathBuf,
 }
 
 impl<'src> Display for Ast<'src> {

@@ -8,7 +8,7 @@ use super::*;
 #[strum_discriminants(name(AttributeDiscriminant))]
 #[strum_discriminants(derive(EnumString))]
 #[strum_discriminants(strum(serialize_all = "kebab-case"))]
-pub(crate) enum Attribute<'src> {
+pub enum Attribute<'src> {
   Confirm(Option<StringLiteral<'src>>),
   Doc(Option<StringLiteral<'src>>),
   Extension(StringLiteral<'src>),
@@ -45,7 +45,7 @@ impl AttributeDiscriminant {
 }
 
 impl<'src> Attribute<'src> {
-  pub(crate) fn new(
+  pub fn new(
     name: Name<'src>,
     arguments: Vec<StringLiteral<'src>>,
   ) -> CompileResult<'src, Self> {
@@ -96,7 +96,7 @@ impl<'src> Attribute<'src> {
     })
   }
 
-  pub(crate) fn name(&self) -> &'static str {
+  pub fn name(&self) -> &'static str {
     self.into()
   }
 }
