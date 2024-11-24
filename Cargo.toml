@@ -1,5 +1,5 @@
 [package]
-name = "just"
+name = "pub-just"
 version = "1.37.0"
 authors = ["Casey Rodarmor <casey@rodarmor.com>"]
 autotests = false
