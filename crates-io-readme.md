@@ -1,3 +1,5 @@
+An actually usable crate for just.
+
 `just` is a handy way to save and run project-specific commands.
 
 Commands are stored in a file called `justfile` or `Justfile` with syntax inspired by `make`:

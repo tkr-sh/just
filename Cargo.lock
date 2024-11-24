@@ -520,49 +520,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "just"
-version = "1.37.0"
-dependencies = [
- "ansi_term",
- "blake3",
- "camino",
- "chrono",
- "clap",
- "clap_complete",
- "clap_mangen",
- "ctrlc",
- "derive-where",
- "dirs",
- "dotenvy",
- "edit-distance",
- "executable-path",
- "heck",
- "lexiclean",
- "libc",
- "num_cpus",
- "once_cell",
- "percent-encoding",
- "pretty_assertions",
- "rand",
- "regex",
- "semver",
- "serde",
- "serde_json",
- "sha2",
- "shellexpand",
- "similar",
- "snafu",
- "strum",
- "target",
- "tempfile",
- "temptree",
- "typed-arena",
- "unicode-width 0.2.0",
- "uuid",
- "which",
-]
-
-[[package]]
 name = "lexiclean"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -686,6 +643,49 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "pub-just"
+version = "1.37.0"
+dependencies = [
+ "ansi_term",
+ "blake3",
+ "camino",
+ "chrono",
+ "clap",
+ "clap_complete",
+ "clap_mangen",
+ "ctrlc",
+ "derive-where",
+ "dirs",
+ "dotenvy",
+ "edit-distance",
+ "executable-path",
+ "heck",
+ "lexiclean",
+ "libc",
+ "num_cpus",
+ "once_cell",
+ "percent-encoding",
+ "pretty_assertions",
+ "rand",
+ "regex",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2",
+ "shellexpand",
+ "similar",
+ "snafu",
+ "strum",
+ "target",
+ "tempfile",
+ "temptree",
+ "typed-arena",
+ "unicode-width 0.2.0",
+ "uuid",
+ "which",
 ]
 
 [[package]]
