@@ -46,6 +46,11 @@ pub enum Subcommand {
   Variables,
 }
 
+pub struct Directive {
+  doc: Option<String>,
+  name: String,
+}
+
 impl Subcommand {
   pub fn execute<'src>(&self, config: &Config, loader: &'src Loader) -> RunResult<'src> {
     use Subcommand::*;
@@ -394,6 +399,7 @@ impl Subcommand {
   }
 
   fn list(config: &Config, mut module: &Justfile, path: &ModulePath) -> RunResult<'static> {
+    println!("{:#?}", path.path);
     for name in &path.path {
       module = module
         .modules
@@ -401,11 +407,189 @@ impl Subcommand {
         .ok_or_else(|| Error::UnknownSubmodule {
           path: path.to_string(),
         })?;
+
+      println!("{name:#?}");
     }
 
-    Self::list_module(config, module, 0);
+    Self::list_module_vec(config, module, 0);
 
     Ok(())
+  }
+
+  fn list_module_vec(config: &Config, module: &Justfile, depth: usize) {
+    let aliases = if config.no_aliases {
+      BTreeMap::new()
+    } else {
+      let mut aliases = BTreeMap::<&str, Vec<&str>>::new();
+      for alias in module.aliases.values().filter(|alias| !alias.is_private()) {
+        aliases
+          .entry(alias.target.name.lexeme())
+          .or_default()
+          .push(alias.name.lexeme());
+      }
+      aliases
+    };
+
+    let signature_widths = {
+      let mut signature_widths: BTreeMap<&str, usize> = BTreeMap::new();
+
+      for (name, recipe) in &module.recipes {
+        if !recipe.is_public() {
+          continue;
+        }
+
+        for name in iter::once(name).chain(aliases.get(name).unwrap_or(&Vec::new())) {
+          signature_widths.insert(
+            name,
+            UnicodeWidthStr::width(
+              RecipeSignature { name, recipe }
+                .color_display(Color::never())
+                .to_string()
+                .as_str(),
+            ),
+          );
+        }
+      }
+      if !config.list_submodules {
+        for (name, _) in &module.modules {
+          signature_widths.insert(name, UnicodeWidthStr::width(format!("{name} ...").as_str()));
+        }
+      }
+
+      signature_widths
+    };
+
+    let max_signature_width = signature_widths
+      .values()
+      .copied()
+      .filter(|width| *width <= 50)
+      .max()
+      .unwrap_or(0);
+
+    let list_prefix = config.list_prefix.repeat(depth + 1);
+
+    if depth == 0 {
+      print!("{}", config.list_heading);
+    }
+
+    let recipe_groups = {
+      let mut groups = BTreeMap::<Option<String>, Vec<&Recipe>>::new();
+      for recipe in module.public_recipes(config) {
+        let recipe_groups = recipe.groups();
+        if recipe_groups.is_empty() {
+          groups.entry(None).or_default().push(recipe);
+        } else {
+          for group in recipe_groups {
+            groups.entry(Some(group)).or_default().push(recipe);
+          }
+        }
+      }
+      groups
+    };
+
+    let submodule_groups = {
+      let mut groups = BTreeMap::<Option<String>, Vec<&Justfile>>::new();
+      for submodule in module.modules(config) {
+        let submodule_groups = submodule.groups();
+        if submodule_groups.is_empty() {
+          groups.entry(None).or_default().push(submodule);
+        } else {
+          for group in submodule_groups {
+            groups
+              .entry(Some(group.to_string()))
+              .or_default()
+              .push(submodule);
+          }
+        }
+      }
+      groups
+    };
+
+    let mut ordered_groups = module
+      .public_groups(config)
+      .into_iter()
+      .map(Some)
+      .collect::<Vec<Option<String>>>();
+
+    if recipe_groups.contains_key(&None) || submodule_groups.contains_key(&None) {
+      ordered_groups.insert(0, None);
+    }
+
+    let no_groups = ordered_groups.len() == 1 && ordered_groups.first() == Some(&None);
+    let mut groups_count = 0;
+    if !no_groups {
+      groups_count = ordered_groups.len();
+    }
+
+    for (i, group) in ordered_groups.into_iter().enumerate() {
+      if i > 0 {
+        println!();
+      }
+
+      if let Some(recipes) = recipe_groups.get(&group) {
+        for recipe in recipes {
+          for (i, name) in iter::once(&recipe.name())
+            .chain(aliases.get(recipe.name()).unwrap_or(&Vec::new()))
+            .enumerate()
+          {
+            let doc = if i == 0 {
+              recipe.doc().map(Cow::Borrowed)
+            } else {
+              Some(Cow::Owned(format!("alias for `{}`", recipe.name)))
+            };
+
+            if let Some(doc) = &doc {
+              if doc.lines().count() > 1 {
+                for line in doc.lines() {
+                  println!(
+                    "{list_prefix}{} {}",
+                    config.color.stdout().doc().paint("#"),
+                    config.color.stdout().doc().paint(line),
+                  );
+                }
+              }
+            }
+
+            print!(
+              "{list_prefix}{}",
+              RecipeSignature { name, recipe }.color_display(config.color.stdout())
+            );
+
+            println!("\n[{name} |  {list_prefix}]|");
+
+            format_doc(
+              config,
+              name,
+              doc.as_deref(),
+              max_signature_width,
+              &signature_widths,
+            );
+          }
+        }
+      }
+
+      if let Some(submodules) = submodule_groups.get(&group) {
+        for (i, submodule) in submodules.iter().enumerate() {
+          if config.list_submodules {
+            if no_groups && (i + groups_count > 0) {
+              println!();
+            }
+            println!("{list_prefix}{}:", submodule.name());
+
+            Self::list_module_vec(config, submodule, depth + 1);
+          } else {
+            print!("{list_prefix}{} ...", submodule.name());
+            format_doc(
+              config,
+              submodule.name(),
+              submodule.doc.as_deref(),
+              max_signature_width,
+              &signature_widths,
+            );
+          }
+        }
+      }
+    }
   }
 
   fn list_module(config: &Config, module: &Justfile, depth: usize) {
@@ -592,6 +776,8 @@ impl Subcommand {
               "{list_prefix}{}",
               RecipeSignature { name, recipe }.color_display(config.color.stdout())
             );
+
+            println!("\n[{name} |  {list_prefix}]|");
 
             format_doc(
               config,

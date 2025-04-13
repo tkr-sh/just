@@ -15,6 +15,8 @@ pub fn run(args: impl Iterator<Item = impl Into<OsString> + Clone>) -> Result<()
 
   let config = Config::from_matches(&matches).map_err(Error::from);
 
+  println!("{config:#?}");
+
   let (color, verbosity) = config
     .as_ref()
     .map(|config| (config.color, config.verbosity))
@@ -24,6 +26,7 @@ pub fn run(args: impl Iterator<Item = impl Into<OsString> + Clone>) -> Result<()
 
   config
     .and_then(|config| {
+      println!("{config:#?}");
       InterruptHandler::install(config.verbosity).ok();
       config.subcommand.execute(&config, &loader)
     })
