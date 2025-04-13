@@ -2,21 +2,21 @@ use super::*;
 
 #[test]
 fn ignore_leading_byte_order_mark() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       \u{feff}foo:
         echo bar
     ",
-    )
-    .stderr("echo bar\n")
-    .stdout("bar\n")
-    .run();
+        )
+        .stderr("echo bar\n")
+        .stdout("bar\n")
+        .run();
 }
 
 #[test]
 fn non_leading_byte_order_mark_produces_error() {
-  Test::new()
+    Test::new()
     .justfile(
       "
       foo:
@@ -38,17 +38,17 @@ fn non_leading_byte_order_mark_produces_error() {
 
 #[test]
 fn dont_mention_byte_order_mark_in_errors() {
-  Test::new()
-    .justfile("{")
-    .stderr(
-      "
+    Test::new()
+        .justfile("{")
+        .stderr(
+            "
       error: Expected '@', '[', comment, end of file, end of line, or identifier, but found '{'
        ——▶ justfile:1:1
         │
       1 │ {
         │ ^
       ",
-    )
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .status(EXIT_FAILURE)
+        .run();
 }

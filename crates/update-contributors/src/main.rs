@@ -1,29 +1,29 @@
 use {
-  regex::{Captures, Regex},
-  std::{fs, process::Command, str},
+    regex::{Captures, Regex},
+    std::{fs, process::Command, str},
 };
 
 fn author(pr: u64) -> String {
-  eprintln!("#{pr}");
-  let output = Command::new("sh")
-    .args([
-      "-c",
-      &format!("gh pr view {pr} --json author | jq -r .author.login"),
-    ])
-    .output()
-    .unwrap();
+    eprintln!("#{pr}");
+    let output = Command::new("sh")
+        .args([
+            "-c",
+            &format!("gh pr view {pr} --json author | jq -r .author.login"),
+        ])
+        .output()
+        .unwrap();
 
-  assert!(
-    output.status.success(),
-    "{}",
-    String::from_utf8_lossy(&output.stderr)
-  );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 
-  str::from_utf8(&output.stdout).unwrap().trim().to_owned()
+    str::from_utf8(&output.stdout).unwrap().trim().to_owned()
 }
 
 fn main() {
-  fs::write(
+    fs::write(
     "CHANGELOG.md",
     &*Regex::new(r"\(#(\d+)( by @[a-z]+)?\)")
       .unwrap()

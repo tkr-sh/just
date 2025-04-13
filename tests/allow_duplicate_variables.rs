@@ -2,9 +2,9 @@ use super::*;
 
 #[test]
 fn allow_duplicate_variables() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       a := 'foo'
       a := 'bar'
 
@@ -13,9 +13,9 @@ fn allow_duplicate_variables() {
       b:
         echo {{a}}
       ",
-    )
-    .arg("b")
-    .stdout("bar\n")
-    .stderr("echo bar\n")
-    .run();
+        )
+        .arg("b")
+        .stdout("bar\n")
+        .stderr("echo bar\n")
+        .run();
 }

@@ -132,108 +132,108 @@ test! {
 
 #[test]
 fn no_quiet_setting() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         foo:
           echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .stderr("echo FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .stderr("echo FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       foo:
         echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting_with_no_quiet_attribute() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       [no-quiet]
       foo:
         echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .stderr("echo FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .stderr("echo FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting_with_quiet_recipe() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       @foo:
         echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting_with_quiet_line() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       foo:
         @echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting_with_no_quiet_attribute_and_quiet_recipe() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       [no-quiet]
       @foo:
         echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .run();
 }
 
 #[test]
 fn quiet_setting_with_no_quiet_attribute_and_quiet_line() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       set quiet
 
       [no-quiet]
       foo:
         @echo FOO
       ",
-    )
-    .stdout("FOO\n")
-    .run();
+        )
+        .stdout("FOO\n")
+        .run();
 }

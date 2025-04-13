@@ -2,9 +2,9 @@ use super::*;
 
 #[test]
 fn os_family() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       [unix]
       foo:
         echo bar
@@ -13,29 +13,33 @@ fn os_family() {
       foo:
         echo baz
     ",
-    )
-    .stdout(if cfg!(unix) {
-      "bar\n"
-    } else if cfg!(windows) {
-      "baz\n"
-    } else {
-      panic!("unexpected os family")
-    })
-    .stderr(if cfg!(unix) {
-      "echo bar\n"
-    } else if cfg!(windows) {
-      "echo baz\n"
-    } else {
-      panic!("unexpected os family")
-    })
-    .run();
+        )
+        .stdout(
+            if cfg!(unix) {
+                "bar\n"
+            } else if cfg!(windows) {
+                "baz\n"
+            } else {
+                panic!("unexpected os family")
+            },
+        )
+        .stderr(
+            if cfg!(unix) {
+                "echo bar\n"
+            } else if cfg!(windows) {
+                "echo baz\n"
+            } else {
+                panic!("unexpected os family")
+            },
+        )
+        .run();
 }
 
 #[test]
 fn os() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       [macos]
       foo:
         echo bar
@@ -48,33 +52,37 @@ fn os() {
       foo:
         echo quxx
     ",
-    )
-    .stdout(if cfg!(target_os = "macos") {
-      "bar\n"
-    } else if cfg!(windows) {
-      "baz\n"
-    } else if cfg!(target_os = "linux") {
-      "quxx\n"
-    } else {
-      panic!("unexpected os family")
-    })
-    .stderr(if cfg!(target_os = "macos") {
-      "echo bar\n"
-    } else if cfg!(windows) {
-      "echo baz\n"
-    } else if cfg!(target_os = "linux") {
-      "echo quxx\n"
-    } else {
-      panic!("unexpected os family")
-    })
-    .run();
+        )
+        .stdout(
+            if cfg!(target_os = "macos") {
+                "bar\n"
+            } else if cfg!(windows) {
+                "baz\n"
+            } else if cfg!(target_os = "linux") {
+                "quxx\n"
+            } else {
+                panic!("unexpected os family")
+            },
+        )
+        .stderr(
+            if cfg!(target_os = "macos") {
+                "echo bar\n"
+            } else if cfg!(windows) {
+                "echo baz\n"
+            } else if cfg!(target_os = "linux") {
+                "echo quxx\n"
+            } else {
+                panic!("unexpected os family")
+            },
+        )
+        .run();
 }
 
 #[test]
 fn all() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       [macos]
       [windows]
       [linux]
@@ -82,22 +90,22 @@ fn all() {
       foo:
         echo bar
     ",
-    )
-    .stdout("bar\n")
-    .stderr("echo bar\n")
-    .run();
+        )
+        .stdout("bar\n")
+        .stderr("echo bar\n")
+        .run();
 }
 
 #[test]
 fn none() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       foo:
         echo bar
     ",
-    )
-    .stdout("bar\n")
-    .stderr("echo bar\n")
-    .run();
+        )
+        .stdout("bar\n")
+        .stderr("echo bar\n")
+        .run();
 }

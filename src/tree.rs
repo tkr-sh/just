@@ -48,90 +48,90 @@ macro_rules! tree {
 /// A `Tree` is either…
 #[derive(Debug, PartialEq)]
 pub enum Tree<'text> {
-  /// …an atom containing text, or…
-  Atom(Cow<'text, str>),
-  /// …a list containing zero or more `Tree`s.
-  List(Vec<Self>),
+    /// …an atom containing text, or…
+    Atom(Cow<'text, str>),
+    /// …a list containing zero or more `Tree`s.
+    List(Vec<Self>),
 }
 
 impl<'text> Tree<'text> {
-  /// Construct an Atom from a text scalar
-  pub fn atom(text: impl Into<Cow<'text, str>>) -> Self {
-    Self::Atom(text.into())
-  }
-
-  /// Construct a List from an iterable of trees
-  pub fn list(children: impl IntoIterator<Item = Self>) -> Self {
-    Self::List(children.into_iter().collect())
-  }
-
-  /// Convenience function to create an atom containing quoted text
-  pub fn string(contents: impl AsRef<str>) -> Self {
-    Self::atom(format!("\"{}\"", contents.as_ref()))
-  }
-
-  /// Push a child node into self, turning it into a List if it was an Atom
-  pub fn push(self, tree: impl Into<Self>) -> Self {
-    match self {
-      Self::List(mut children) => {
-        children.push(tree.into());
-        Self::List(children)
-      }
-      Self::Atom(text) => Self::List(vec![Self::Atom(text), tree.into()]),
-    }
-  }
-
-  /// Extend a self with a tail of Trees, turning self into a List if it was an
-  /// Atom
-  pub fn extend<I, T>(self, tail: I) -> Self
-  where
-    I: IntoIterator<Item = T>,
-    T: Into<Self>,
-  {
-    // Tree::List(children.into_iter().collect())
-    let mut head = match self {
-      Self::List(children) => children,
-      Self::Atom(text) => vec![Self::Atom(text)],
-    };
-
-    for child in tail {
-      head.push(child.into());
+    /// Construct an Atom from a text scalar
+    pub fn atom(text: impl Into<Cow<'text, str>>) -> Self {
+        Self::Atom(text.into())
     }
 
-    Self::List(head)
-  }
+    /// Construct a List from an iterable of trees
+    pub fn list(children: impl IntoIterator<Item = Self>) -> Self {
+        Self::List(children.into_iter().collect())
+    }
 
-  /// Like `push`, but modify self in-place
-  pub fn push_mut(&mut self, tree: impl Into<Self>) {
-    *self = mem::replace(self, Self::List(Vec::new())).push(tree.into());
-  }
+    /// Convenience function to create an atom containing quoted text
+    pub fn string(contents: impl AsRef<str>) -> Self {
+        Self::atom(format!("\"{}\"", contents.as_ref()))
+    }
+
+    /// Push a child node into self, turning it into a List if it was an Atom
+    pub fn push(self, tree: impl Into<Self>) -> Self {
+        match self {
+            Self::List(mut children) => {
+                children.push(tree.into());
+                Self::List(children)
+            },
+            Self::Atom(text) => Self::List(vec![Self::Atom(text), tree.into()]),
+        }
+    }
+
+    /// Extend a self with a tail of Trees, turning self into a List if it was an
+    /// Atom
+    pub fn extend<I, T>(self, tail: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<Self>,
+    {
+        // Tree::List(children.into_iter().collect())
+        let mut head = match self {
+            Self::List(children) => children,
+            Self::Atom(text) => vec![Self::Atom(text)],
+        };
+
+        for child in tail {
+            head.push(child.into());
+        }
+
+        Self::List(head)
+    }
+
+    /// Like `push`, but modify self in-place
+    pub fn push_mut(&mut self, tree: impl Into<Self>) {
+        *self = mem::replace(self, Self::List(Vec::new())).push(tree.into());
+    }
 }
 
 impl Display for Tree<'_> {
-  fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-    match self {
-      Self::List(children) => {
-        write!(f, "(")?;
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self {
+            Self::List(children) => {
+                write!(f, "(")?;
 
-        for (i, child) in children.iter().enumerate() {
-          if i > 0 {
-            write!(f, " ")?;
-          }
-          write!(f, "{child}")?;
+                for (i, child) in children.iter().enumerate() {
+                    if i > 0 {
+                        write!(f, " ")?;
+                    }
+                    write!(f, "{child}")?;
+                }
+
+                write!(f, ")")
+            },
+            Self::Atom(text) => write!(f, "{text}"),
         }
-
-        write!(f, ")")
-      }
-      Self::Atom(text) => write!(f, "{text}"),
     }
-  }
 }
 
 impl<'text, T> From<T> for Tree<'text>
 where
-  T: Into<Cow<'text, str>>,
+    T: Into<Cow<'text, str>>,
 {
-  fn from(text: T) -> Self {
-    Self::Atom(text.into())
-  }
+    fn from(text: T) -> Self {
+        Self::Atom(text.into())
+    }
 }

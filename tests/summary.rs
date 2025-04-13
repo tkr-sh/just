@@ -44,42 +44,42 @@ test! {
 
 #[test]
 fn no_recipes() {
-  Test::new()
-    .arg("--summary")
-    .stderr("Justfile contains no recipes.\n")
-    .stdout("\n\n\n")
-    .run();
+    Test::new()
+        .arg("--summary")
+        .stderr("Justfile contains no recipes.\n")
+        .stdout("\n\n\n")
+        .run();
 }
 
 #[test]
 fn submodule_recipes() {
-  Test::new()
-    .write("foo.just", "mod bar\nfoo:")
-    .write("bar.just", "mod baz\nbar:")
-    .write("baz.just", "mod biz\nbaz:")
-    .write("biz.just", "biz:")
-    .justfile(
-      "
+    Test::new()
+        .write("foo.just", "mod bar\nfoo:")
+        .write("bar.just", "mod baz\nbar:")
+        .write("baz.just", "mod biz\nbaz:")
+        .write("biz.just", "biz:")
+        .justfile(
+            "
         mod foo
 
         bar:
       ",
-    )
-    .arg("--summary")
-    .stdout("bar foo::foo foo::bar::bar foo::bar::baz::baz foo::bar::baz::biz::biz\n")
-    .run();
+        )
+        .arg("--summary")
+        .stdout("bar foo::foo foo::bar::bar foo::bar::baz::baz foo::bar::baz::biz::biz\n")
+        .run();
 }
 
 #[test]
 fn summary_implies_unstable() {
-  Test::new()
-    .write("foo.just", "foo:")
-    .justfile(
-      "
+    Test::new()
+        .write("foo.just", "foo:")
+        .justfile(
+            "
         mod foo
       ",
-    )
-    .arg("--summary")
-    .stdout("foo::foo\n")
-    .run();
+        )
+        .arg("--summary")
+        .stdout("foo::foo\n")
+        .run();
 }

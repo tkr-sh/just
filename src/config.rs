@@ -1,124 +1,130 @@
 use {
-  super::*,
-  clap::{
-    builder::{styling::AnsiColor, FalseyValueParser, Styles},
-    parser::ValuesRef,
-    value_parser, Arg, ArgAction, ArgGroup, ArgMatches, Command,
-  },
+    super::*,
+    clap::{
+        builder::{styling::AnsiColor, FalseyValueParser, Styles},
+        parser::ValuesRef,
+        value_parser,
+        Arg,
+        ArgAction,
+        ArgGroup,
+        ArgMatches,
+        Command,
+    },
 };
 
 #[derive(Debug, PartialEq)]
 pub struct Config {
-  pub check: bool,
-  pub color: Color,
-  pub command_color: Option<ansi_term::Color>,
-  pub dotenv_filename: Option<String>,
-  pub dotenv_path: Option<PathBuf>,
-  pub dry_run: bool,
-  pub dump_format: DumpFormat,
-  pub explain: bool,
-  pub highlight: bool,
-  pub invocation_directory: PathBuf,
-  pub list_heading: String,
-  pub list_prefix: String,
-  pub list_submodules: bool,
-  pub load_dotenv: bool,
-  pub no_aliases: bool,
-  pub no_dependencies: bool,
-  pub one: bool,
-  pub search_config: SearchConfig,
-  pub shell: Option<String>,
-  pub shell_args: Option<Vec<String>>,
-  pub shell_command: bool,
-  pub subcommand: Subcommand,
-  pub timestamp: bool,
-  pub timestamp_format: String,
-  pub unsorted: bool,
-  pub unstable: bool,
-  pub verbosity: Verbosity,
-  pub yes: bool,
+    pub check: bool,
+    pub color: Color,
+    pub command_color: Option<ansi_term::Color>,
+    pub dotenv_filename: Option<String>,
+    pub dotenv_path: Option<PathBuf>,
+    pub dry_run: bool,
+    pub dump_format: DumpFormat,
+    pub explain: bool,
+    pub highlight: bool,
+    pub invocation_directory: PathBuf,
+    pub list_heading: String,
+    pub list_prefix: String,
+    pub list_submodules: bool,
+    pub load_dotenv: bool,
+    pub no_aliases: bool,
+    pub no_dependencies: bool,
+    pub one: bool,
+    pub search_config: SearchConfig,
+    pub shell: Option<String>,
+    pub shell_args: Option<Vec<String>>,
+    pub shell_command: bool,
+    pub subcommand: Subcommand,
+    pub timestamp: bool,
+    pub timestamp_format: String,
+    pub unsorted: bool,
+    pub unstable: bool,
+    pub verbosity: Verbosity,
+    pub yes: bool,
 }
 
 mod cmd {
-  pub const CHANGELOG: &str = "CHANGELOG";
-  pub const CHOOSE: &str = "CHOOSE";
-  pub const COMMAND: &str = "COMMAND";
-  pub const COMPLETIONS: &str = "COMPLETIONS";
-  pub const DUMP: &str = "DUMP";
-  pub const EDIT: &str = "EDIT";
-  pub const EVALUATE: &str = "EVALUATE";
-  pub const FORMAT: &str = "FORMAT";
-  pub const GROUPS: &str = "GROUPS";
-  pub const INIT: &str = "INIT";
-  pub const LIST: &str = "LIST";
-  pub const MAN: &str = "MAN";
-  pub const SHOW: &str = "SHOW";
-  pub const SUMMARY: &str = "SUMMARY";
-  pub const VARIABLES: &str = "VARIABLES";
+    pub const CHANGELOG: &str = "CHANGELOG";
+    pub const CHOOSE: &str = "CHOOSE";
+    pub const COMMAND: &str = "COMMAND";
+    pub const COMPLETIONS: &str = "COMPLETIONS";
+    pub const DUMP: &str = "DUMP";
+    pub const EDIT: &str = "EDIT";
+    pub const EVALUATE: &str = "EVALUATE";
+    pub const FORMAT: &str = "FORMAT";
+    pub const GROUPS: &str = "GROUPS";
+    pub const INIT: &str = "INIT";
+    pub const LIST: &str = "LIST";
+    pub const MAN: &str = "MAN";
+    pub const SHOW: &str = "SHOW";
+    pub const SUMMARY: &str = "SUMMARY";
+    pub const VARIABLES: &str = "VARIABLES";
 
-  pub const ALL: &[&str] = &[
-    CHANGELOG,
-    CHOOSE,
-    COMMAND,
-    COMPLETIONS,
-    DUMP,
-    EDIT,
-    EVALUATE,
-    FORMAT,
-    INIT,
-    LIST,
-    MAN,
-    SHOW,
-    SUMMARY,
-    VARIABLES,
-  ];
+    pub const ALL: &[&str] = &[
+        CHANGELOG,
+        CHOOSE,
+        COMMAND,
+        COMPLETIONS,
+        DUMP,
+        EDIT,
+        EVALUATE,
+        FORMAT,
+        INIT,
+        LIST,
+        MAN,
+        SHOW,
+        SUMMARY,
+        VARIABLES,
+    ];
 
-  pub const ARGLESS: &[&str] =
-    &[CHANGELOG, DUMP, EDIT, FORMAT, INIT, MAN, SUMMARY, VARIABLES];
+    pub const ARGLESS: &[&str] = &[
+        CHANGELOG, DUMP, EDIT, FORMAT, INIT, MAN, SUMMARY, VARIABLES,
+    ];
 
-  pub const HEADING: &str = "Commands";
+    pub const HEADING: &str = "Commands";
 }
 
 mod arg {
-  pub const ARGUMENTS: &str = "ARGUMENTS";
-  pub const CHECK: &str = "CHECK";
-  pub const CHOOSER: &str = "CHOOSER";
-  pub const CLEAR_SHELL_ARGS: &str = "CLEAR-SHELL-ARGS";
-  pub const COLOR: &str = "COLOR";
-  pub const COMMAND_COLOR: &str = "COMMAND-COLOR";
-  pub const DOTENV_FILENAME: &str = "DOTENV-FILENAME";
-  pub const DOTENV_PATH: &str = "DOTENV-PATH";
-  pub const DRY_RUN: &str = "DRY-RUN";
-  pub const DUMP_FORMAT: &str = "DUMP-FORMAT";
-  pub const EXPLAIN: &str = "EXPLAIN";
-  pub const GLOBAL_JUSTFILE: &str = "GLOBAL-JUSTFILE";
-  pub const HIGHLIGHT: &str = "HIGHLIGHT";
-  pub const JUSTFILE: &str = "JUSTFILE";
-  pub const LIST_HEADING: &str = "LIST-HEADING";
-  pub const LIST_PREFIX: &str = "LIST-PREFIX";
-  pub const LIST_SUBMODULES: &str = "LIST-SUBMODULES";
-  pub const NO_ALIASES: &str = "NO-ALIASES";
-  pub const NO_DEPS: &str = "NO-DEPS";
-  pub const NO_DOTENV: &str = "NO-DOTENV";
-  pub const NO_HIGHLIGHT: &str = "NO-HIGHLIGHT";
-  pub const ONE: &str = "ONE";
-  pub const QUIET: &str = "QUIET";
-  pub const SET: &str = "SET";
-  pub const SHELL: &str = "SHELL";
-  pub const SHELL_ARG: &str = "SHELL-ARG";
-  pub const SHELL_COMMAND: &str = "SHELL-COMMAND";
-  pub const TIMESTAMP: &str = "TIMESTAMP";
-  pub const TIMESTAMP_FORMAT: &str = "TIMESTAMP-FORMAT";
-  pub const UNSORTED: &str = "UNSORTED";
-  pub const UNSTABLE: &str = "UNSTABLE";
-  pub const VERBOSE: &str = "VERBOSE";
-  pub const WORKING_DIRECTORY: &str = "WORKING-DIRECTORY";
-  pub const YES: &str = "YES";
+    pub const ARGUMENTS: &str = "ARGUMENTS";
+    pub const CHECK: &str = "CHECK";
+    pub const CHOOSER: &str = "CHOOSER";
+    pub const CLEAR_SHELL_ARGS: &str = "CLEAR-SHELL-ARGS";
+    pub const COLOR: &str = "COLOR";
+    pub const COMMAND_COLOR: &str = "COMMAND-COLOR";
+    pub const DOTENV_FILENAME: &str = "DOTENV-FILENAME";
+    pub const DOTENV_PATH: &str = "DOTENV-PATH";
+    pub const DRY_RUN: &str = "DRY-RUN";
+    pub const DUMP_FORMAT: &str = "DUMP-FORMAT";
+    pub const EXPLAIN: &str = "EXPLAIN";
+    pub const GLOBAL_JUSTFILE: &str = "GLOBAL-JUSTFILE";
+    pub const HIGHLIGHT: &str = "HIGHLIGHT";
+    pub const JUSTFILE: &str = "JUSTFILE";
+    pub const LIST_HEADING: &str = "LIST-HEADING";
+    pub const LIST_PREFIX: &str = "LIST-PREFIX";
+    pub const LIST_SUBMODULES: &str = "LIST-SUBMODULES";
+    pub const NO_ALIASES: &str = "NO-ALIASES";
+    pub const NO_DEPS: &str = "NO-DEPS";
+    pub const NO_DOTENV: &str = "NO-DOTENV";
+    pub const NO_HIGHLIGHT: &str = "NO-HIGHLIGHT";
+    pub const ONE: &str = "ONE";
+    pub const QUIET: &str = "QUIET";
+    pub const SET: &str = "SET";
+    pub const SHELL: &str = "SHELL";
+    pub const SHELL_ARG: &str = "SHELL-ARG";
+    pub const SHELL_COMMAND: &str = "SHELL-COMMAND";
+    pub const TIMESTAMP: &str = "TIMESTAMP";
+    pub const TIMESTAMP_FORMAT: &str = "TIMESTAMP-FORMAT";
+    pub const UNSORTED: &str = "UNSORTED";
+    pub const UNSTABLE: &str = "UNSTABLE";
+    pub const VERBOSE: &str = "VERBOSE";
+    pub const WORKING_DIRECTORY: &str = "WORKING-DIRECTORY";
+    pub const YES: &str = "YES";
 }
 
 impl Config {
-  pub fn app() -> Command {
-    Command::new(env!("CARGO_PKG_NAME"))
+    pub fn app() -> Command {
+        Command::new(env!("CARGO_PKG_NAME"))
       .bin_name(env!("CARGO_PKG_NAME"))
       .version(env!("CARGO_PKG_VERSION"))
       .author(env!("CARGO_PKG_AUTHORS"))
@@ -540,246 +546,247 @@ impl Config {
           .action(ArgAction::Append)
           .help("Overrides and recipe(s) to run, defaulting to the first recipe in the justfile"),
       )
-  }
-
-  fn parse_module_path(values: ValuesRef<String>) -> ConfigResult<ModulePath> {
-    let path = values.clone().map(|s| (*s).as_str()).collect::<Vec<&str>>();
-
-    let path = if path.len() == 1 && path[0].contains(' ') {
-      path[0].split_whitespace().collect::<Vec<&str>>()
-    } else {
-      path
-    };
-
-    path
-      .as_slice()
-      .try_into()
-      .map_err(|()| ConfigError::ModulePath {
-        path: values.cloned().collect(),
-      })
-  }
-
-  fn search_config(matches: &ArgMatches, positional: &Positional) -> ConfigResult<SearchConfig> {
-    if matches.get_flag(arg::GLOBAL_JUSTFILE) {
-      return Ok(SearchConfig::GlobalJustfile);
     }
 
-    let justfile = matches.get_one::<PathBuf>(arg::JUSTFILE).map(Into::into);
+    fn parse_module_path(values: ValuesRef<String>) -> ConfigResult<ModulePath> {
+        let path = values.clone().map(|s| (*s).as_str()).collect::<Vec<&str>>();
 
-    let working_directory = matches
-      .get_one::<PathBuf>(arg::WORKING_DIRECTORY)
-      .map(Into::into);
+        let path = if path.len() == 1 && path[0].contains(' ') {
+            path[0].split_whitespace().collect::<Vec<&str>>()
+        } else {
+            path
+        };
 
-    if let Some(search_directory) = positional.search_directory.as_ref().map(PathBuf::from) {
-      if justfile.is_some() || working_directory.is_some() {
-        return Err(ConfigError::SearchDirConflict);
-      }
-      Ok(SearchConfig::FromSearchDirectory { search_directory })
-    } else {
-      match (justfile, working_directory) {
-        (None, None) => Ok(SearchConfig::FromInvocationDirectory),
-        (Some(justfile), None) => Ok(SearchConfig::WithJustfile { justfile }),
-        (Some(justfile), Some(working_directory)) => {
-          Ok(SearchConfig::WithJustfileAndWorkingDirectory {
-            justfile,
-            working_directory,
-          })
+        path.as_slice().try_into().map_err(|()| {
+            ConfigError::ModulePath {
+                path: values.cloned().collect(),
+            }
+        })
+    }
+
+    fn search_config(matches: &ArgMatches, positional: &Positional) -> ConfigResult<SearchConfig> {
+        if matches.get_flag(arg::GLOBAL_JUSTFILE) {
+            return Ok(SearchConfig::GlobalJustfile);
         }
-        (None, Some(_)) => Err(ConfigError::internal(
-          "--working-directory set without --justfile",
-        )),
-      }
-    }
-  }
 
-  pub fn from_matches(matches: &ArgMatches) -> ConfigResult<Self> {
-    let mut overrides = BTreeMap::new();
-    if let Some(mut values) = matches.get_many::<String>(arg::SET) {
-      while let (Some(k), Some(v)) = (values.next(), values.next()) {
-        overrides.insert(k.into(), v.into());
-      }
-    }
+        let justfile = matches.get_one::<PathBuf>(arg::JUSTFILE).map(Into::into);
 
-    let positional = Positional::from_values(
-      matches
-        .get_many::<String>(arg::ARGUMENTS)
-        .map(|s| s.map(String::as_str)),
-    );
+        let working_directory = matches
+            .get_one::<PathBuf>(arg::WORKING_DIRECTORY)
+            .map(Into::into);
 
-    for (name, value) in &positional.overrides {
-      overrides.insert(name.clone(), value.clone());
-    }
-
-    let search_config = Self::search_config(matches, &positional)?;
-
-    for subcommand in cmd::ARGLESS {
-      if matches.get_flag(subcommand) {
-        match (!overrides.is_empty(), !positional.arguments.is_empty()) {
-          (false, false) => {}
-          (true, false) => {
-            return Err(ConfigError::SubcommandOverrides {
-              subcommand,
-              overrides,
-            });
-          }
-          (false, true) => {
-            return Err(ConfigError::SubcommandArguments {
-              arguments: positional.arguments,
-              subcommand,
-            });
-          }
-          (true, true) => {
-            return Err(ConfigError::SubcommandOverridesAndArguments {
-              arguments: positional.arguments,
-              subcommand,
-              overrides,
-            });
-          }
+        if let Some(search_directory) = positional.search_directory.as_ref().map(PathBuf::from) {
+            if justfile.is_some() || working_directory.is_some() {
+                return Err(ConfigError::SearchDirConflict);
+            }
+            Ok(SearchConfig::FromSearchDirectory { search_directory })
+        } else {
+            match (justfile, working_directory) {
+                (None, None) => Ok(SearchConfig::FromInvocationDirectory),
+                (Some(justfile), None) => Ok(SearchConfig::WithJustfile { justfile }),
+                (Some(justfile), Some(working_directory)) => {
+                    Ok(SearchConfig::WithJustfileAndWorkingDirectory {
+                        justfile,
+                        working_directory,
+                    })
+                },
+                (None, Some(_)) => {
+                    Err(ConfigError::internal(
+                        "--working-directory set without --justfile",
+                    ))
+                },
+            }
         }
-      }
     }
 
-    let subcommand = if matches.get_flag(cmd::CHANGELOG) {
-      Subcommand::Changelog
-    } else if matches.get_flag(cmd::CHOOSE) {
-      Subcommand::Choose {
-        chooser: matches.get_one::<String>(arg::CHOOSER).map(Into::into),
-        overrides,
-      }
-    } else if let Some(values) = matches.get_many::<OsString>(cmd::COMMAND) {
-      let mut arguments = values.map(Into::into).collect::<Vec<OsString>>();
-      Subcommand::Command {
-        binary: arguments.remove(0),
-        arguments,
-        overrides,
-      }
-    } else if let Some(&shell) = matches.get_one::<completions::Shell>(cmd::COMPLETIONS) {
-      Subcommand::Completions { shell }
-    } else if matches.get_flag(cmd::DUMP) {
-      Subcommand::Dump
-    } else if matches.get_flag(cmd::EDIT) {
-      Subcommand::Edit
-    } else if matches.get_flag(cmd::EVALUATE) {
-      if positional.arguments.len() > 1 {
-        return Err(ConfigError::SubcommandArguments {
-          subcommand: cmd::EVALUATE,
-          arguments: positional
-            .arguments
-            .into_iter()
-            .skip(1)
-            .collect::<Vec<String>>(),
-        });
-      }
+    pub fn from_matches(matches: &ArgMatches) -> ConfigResult<Self> {
+        let mut overrides = BTreeMap::new();
+        if let Some(mut values) = matches.get_many::<String>(arg::SET) {
+            while let (Some(k), Some(v)) = (values.next(), values.next()) {
+                overrides.insert(k.into(), v.into());
+            }
+        }
 
-      Subcommand::Evaluate {
-        variable: positional.arguments.into_iter().next(),
-        overrides,
-      }
-    } else if matches.get_flag(cmd::FORMAT) {
-      Subcommand::Format
-    } else if matches.get_flag(cmd::GROUPS) {
-      Subcommand::Groups
-    } else if matches.get_flag(cmd::INIT) {
-      Subcommand::Init
-    } else if let Some(path) = matches.get_many::<String>(cmd::LIST) {
-      Subcommand::List {
-        path: Self::parse_module_path(path)?,
-      }
-    } else if matches.get_flag(cmd::MAN) {
-      Subcommand::Man
-    } else if let Some(path) = matches.get_many::<String>(cmd::SHOW) {
-      Subcommand::Show {
-        path: Self::parse_module_path(path)?,
-      }
-    } else if matches.get_flag(cmd::SUMMARY) {
-      Subcommand::Summary
-    } else if matches.get_flag(cmd::VARIABLES) {
-      Subcommand::Variables
-    } else {
-      Subcommand::Run {
-        arguments: positional.arguments,
-        overrides,
-      }
-    };
+        let positional = Positional::from_values(
+            matches
+                .get_many::<String>(arg::ARGUMENTS)
+                .map(|s| s.map(String::as_str)),
+        );
 
-    let unstable = matches.get_flag(arg::UNSTABLE) || subcommand == Subcommand::Summary;
-    let explain = matches.get_flag(arg::EXPLAIN);
+        for (name, value) in &positional.overrides {
+            overrides.insert(name.clone(), value.clone());
+        }
 
-    Ok(Self {
-      check: matches.get_flag(arg::CHECK),
-      color: (*matches.get_one::<UseColor>(arg::COLOR).unwrap()).into(),
-      command_color: matches
-        .get_one::<CommandColor>(arg::COMMAND_COLOR)
-        .copied()
-        .map(CommandColor::into),
-      dotenv_filename: matches
-        .get_one::<String>(arg::DOTENV_FILENAME)
-        .map(Into::into),
-      dotenv_path: matches.get_one::<PathBuf>(arg::DOTENV_PATH).map(Into::into),
-      dry_run: matches.get_flag(arg::DRY_RUN),
-      dump_format: matches
-        .get_one::<DumpFormat>(arg::DUMP_FORMAT)
-        .unwrap()
-        .clone(),
-      explain,
-      highlight: !matches.get_flag(arg::NO_HIGHLIGHT),
-      invocation_directory: env::current_dir().context(config_error::CurrentDirContext)?,
-      list_heading: matches.get_one::<String>(arg::LIST_HEADING).unwrap().into(),
-      list_prefix: matches.get_one::<String>(arg::LIST_PREFIX).unwrap().into(),
-      list_submodules: matches.get_flag(arg::LIST_SUBMODULES),
-      load_dotenv: !matches.get_flag(arg::NO_DOTENV),
-      no_aliases: matches.get_flag(arg::NO_ALIASES),
-      no_dependencies: matches.get_flag(arg::NO_DEPS),
-      one: matches.get_flag(arg::ONE),
-      search_config,
-      shell: matches.get_one::<String>(arg::SHELL).map(Into::into),
-      shell_args: if matches.get_flag(arg::CLEAR_SHELL_ARGS) {
-        Some(Vec::new())
-      } else {
-        matches
-          .get_many::<String>(arg::SHELL_ARG)
-          .map(|s| s.map(Into::into).collect())
-      },
-      shell_command: matches.get_flag(arg::SHELL_COMMAND),
-      subcommand,
-      timestamp: matches.get_flag(arg::TIMESTAMP),
-      timestamp_format: matches
-        .get_one::<String>(arg::TIMESTAMP_FORMAT)
-        .unwrap()
-        .into(),
-      unsorted: matches.get_flag(arg::UNSORTED),
-      unstable,
-      verbosity: if matches.get_flag(arg::QUIET) {
-        Verbosity::Quiet
-      } else {
-        Verbosity::from_flag_occurrences(matches.get_count(arg::VERBOSE))
-      },
-      yes: matches.get_flag(arg::YES),
-    })
-  }
+        let search_config = Self::search_config(matches, &positional)?;
 
-  pub fn require_unstable(
-    &self,
-    justfile: &Justfile,
-    unstable_feature: UnstableFeature,
-  ) -> RunResult<'static> {
-    if self.unstable || justfile.settings.unstable {
-      Ok(())
-    } else {
-      Err(Error::UnstableFeature { unstable_feature })
+        for subcommand in cmd::ARGLESS {
+            if matches.get_flag(subcommand) {
+                match (!overrides.is_empty(), !positional.arguments.is_empty()) {
+                    (false, false) => {},
+                    (true, false) => {
+                        return Err(ConfigError::SubcommandOverrides {
+                            subcommand,
+                            overrides,
+                        });
+                    },
+                    (false, true) => {
+                        return Err(ConfigError::SubcommandArguments {
+                            arguments: positional.arguments,
+                            subcommand,
+                        });
+                    },
+                    (true, true) => {
+                        return Err(ConfigError::SubcommandOverridesAndArguments {
+                            arguments: positional.arguments,
+                            subcommand,
+                            overrides,
+                        });
+                    },
+                }
+            }
+        }
+
+        let subcommand = if matches.get_flag(cmd::CHANGELOG) {
+            Subcommand::Changelog
+        } else if matches.get_flag(cmd::CHOOSE) {
+            Subcommand::Choose {
+                chooser: matches.get_one::<String>(arg::CHOOSER).map(Into::into),
+                overrides,
+            }
+        } else if let Some(values) = matches.get_many::<OsString>(cmd::COMMAND) {
+            let mut arguments = values.map(Into::into).collect::<Vec<OsString>>();
+            Subcommand::Command {
+                binary: arguments.remove(0),
+                arguments,
+                overrides,
+            }
+        } else if let Some(&shell) = matches.get_one::<completions::Shell>(cmd::COMPLETIONS) {
+            Subcommand::Completions { shell }
+        } else if matches.get_flag(cmd::DUMP) {
+            Subcommand::Dump
+        } else if matches.get_flag(cmd::EDIT) {
+            Subcommand::Edit
+        } else if matches.get_flag(cmd::EVALUATE) {
+            if positional.arguments.len() > 1 {
+                return Err(ConfigError::SubcommandArguments {
+                    subcommand: cmd::EVALUATE,
+                    arguments: positional
+                        .arguments
+                        .into_iter()
+                        .skip(1)
+                        .collect::<Vec<String>>(),
+                });
+            }
+
+            Subcommand::Evaluate {
+                variable: positional.arguments.into_iter().next(),
+                overrides,
+            }
+        } else if matches.get_flag(cmd::FORMAT) {
+            Subcommand::Format
+        } else if matches.get_flag(cmd::GROUPS) {
+            Subcommand::Groups
+        } else if matches.get_flag(cmd::INIT) {
+            Subcommand::Init
+        } else if let Some(path) = matches.get_many::<String>(cmd::LIST) {
+            Subcommand::List {
+                path: Self::parse_module_path(path)?,
+            }
+        } else if matches.get_flag(cmd::MAN) {
+            Subcommand::Man
+        } else if let Some(path) = matches.get_many::<String>(cmd::SHOW) {
+            Subcommand::Show {
+                path: Self::parse_module_path(path)?,
+            }
+        } else if matches.get_flag(cmd::SUMMARY) {
+            Subcommand::Summary
+        } else if matches.get_flag(cmd::VARIABLES) {
+            Subcommand::Variables
+        } else {
+            Subcommand::Run {
+                arguments: positional.arguments,
+                overrides,
+            }
+        };
+
+        let unstable = matches.get_flag(arg::UNSTABLE) || subcommand == Subcommand::Summary;
+        let explain = matches.get_flag(arg::EXPLAIN);
+
+        Ok(Self {
+            check: matches.get_flag(arg::CHECK),
+            color: (*matches.get_one::<UseColor>(arg::COLOR).unwrap()).into(),
+            command_color: matches
+                .get_one::<CommandColor>(arg::COMMAND_COLOR)
+                .copied()
+                .map(CommandColor::into),
+            dotenv_filename: matches
+                .get_one::<String>(arg::DOTENV_FILENAME)
+                .map(Into::into),
+            dotenv_path: matches.get_one::<PathBuf>(arg::DOTENV_PATH).map(Into::into),
+            dry_run: matches.get_flag(arg::DRY_RUN),
+            dump_format: matches
+                .get_one::<DumpFormat>(arg::DUMP_FORMAT)
+                .unwrap()
+                .clone(),
+            explain,
+            highlight: !matches.get_flag(arg::NO_HIGHLIGHT),
+            invocation_directory: env::current_dir().context(config_error::CurrentDirContext)?,
+            list_heading: matches.get_one::<String>(arg::LIST_HEADING).unwrap().into(),
+            list_prefix: matches.get_one::<String>(arg::LIST_PREFIX).unwrap().into(),
+            list_submodules: matches.get_flag(arg::LIST_SUBMODULES),
+            load_dotenv: !matches.get_flag(arg::NO_DOTENV),
+            no_aliases: matches.get_flag(arg::NO_ALIASES),
+            no_dependencies: matches.get_flag(arg::NO_DEPS),
+            one: matches.get_flag(arg::ONE),
+            search_config,
+            shell: matches.get_one::<String>(arg::SHELL).map(Into::into),
+            shell_args: if matches.get_flag(arg::CLEAR_SHELL_ARGS) {
+                Some(Vec::new())
+            } else {
+                matches
+                    .get_many::<String>(arg::SHELL_ARG)
+                    .map(|s| s.map(Into::into).collect())
+            },
+            shell_command: matches.get_flag(arg::SHELL_COMMAND),
+            subcommand,
+            timestamp: matches.get_flag(arg::TIMESTAMP),
+            timestamp_format: matches
+                .get_one::<String>(arg::TIMESTAMP_FORMAT)
+                .unwrap()
+                .into(),
+            unsorted: matches.get_flag(arg::UNSORTED),
+            unstable,
+            verbosity: if matches.get_flag(arg::QUIET) {
+                Verbosity::Quiet
+            } else {
+                Verbosity::from_flag_occurrences(matches.get_count(arg::VERBOSE))
+            },
+            yes: matches.get_flag(arg::YES),
+        })
     }
-  }
+
+    pub fn require_unstable(
+        &self,
+        justfile: &Justfile,
+        unstable_feature: UnstableFeature,
+    ) -> RunResult<'static> {
+        if self.unstable || justfile.settings.unstable {
+            Ok(())
+        } else {
+            Err(Error::UnstableFeature { unstable_feature })
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
-  use {
-    super::*,
-    clap::error::{ContextKind, ContextValue},
-    pretty_assertions::assert_eq,
-  };
+    use {
+        super::*,
+        clap::error::{ContextKind, ContextValue},
+        pretty_assertions::assert_eq,
+    };
 
-  macro_rules! test {
+    macro_rules! test {
     {
       name: $name:ident,
       args: [$($arg:expr),*],
@@ -824,17 +831,17 @@ mod tests {
     }
   }
 
-  #[track_caller]
-  fn test(arguments: &[&str], want: Config) {
-    let app = Config::app();
-    let matches = app
-      .try_get_matches_from(arguments)
-      .expect("argument parsing failed");
-    let have = Config::from_matches(&matches).expect("config parsing failed");
-    assert_eq!(have, want);
-  }
+    #[track_caller]
+    fn test(arguments: &[&str], want: Config) {
+        let app = Config::app();
+        let matches = app
+            .try_get_matches_from(arguments)
+            .expect("argument parsing failed");
+        let have = Config::from_matches(&matches).expect("config parsing failed");
+        assert_eq!(have, want);
+    }
 
-  macro_rules! error {
+    macro_rules! error {
     {
       name: $name:ident,
       args: [$($arg:expr),*],
@@ -876,7 +883,7 @@ mod tests {
     }
   }
 
-  macro_rules! error_matches {
+    macro_rules! error_matches {
     (
       name: $name:ident,
       args: [$($arg:expr),*],
@@ -900,7 +907,7 @@ mod tests {
     };
   }
 
-  macro_rules! map {
+    macro_rules! map {
     {} => {
       BTreeMap::new()
     };
@@ -917,730 +924,730 @@ mod tests {
     }
   }
 
-  test! {
-    name: default_config,
-    args: [],
-  }
-
-  test! {
-    name: color_default,
-    args: [],
-    color: Color::auto(),
-  }
-
-  test! {
-    name: color_never,
-    args: ["--color", "never"],
-    color: Color::never(),
-  }
-
-  test! {
-    name: color_always,
-    args: ["--color", "always"],
-    color: Color::always(),
-  }
-
-  test! {
-    name: color_auto,
-    args: ["--color", "auto"],
-    color: Color::auto(),
-  }
-
-  error! {
-    name: color_bad_value,
-    args: ["--color", "foo"],
-  }
-
-  test! {
-    name: dry_run_default,
-    args: [],
-    dry_run: false,
-  }
-
-  test! {
-    name: dry_run_long,
-    args: ["--dry-run"],
-    dry_run: true,
-  }
-
-  test! {
-    name: dry_run_short,
-    args: ["-n"],
-    dry_run: true,
-  }
-
-  error! {
-    name: dry_run_quiet,
-    args: ["--dry-run", "--quiet"],
-  }
-
-  test! {
-    name: highlight_default,
-    args: [],
-    highlight: true,
-  }
-
-  test! {
-    name: highlight_yes,
-    args: ["--highlight"],
-    highlight: true,
-  }
-
-  test! {
-    name: highlight_no,
-    args: ["--no-highlight"],
-    highlight: false,
-  }
-
-  test! {
-    name: highlight_no_yes,
-    args: ["--no-highlight", "--highlight"],
-    highlight: true,
-  }
-
-  test! {
-    name: highlight_no_yes_no,
-    args: ["--no-highlight", "--highlight", "--no-highlight"],
-    highlight: false,
-  }
-
-  test! {
-    name: highlight_yes_no,
-    args: ["--highlight", "--no-highlight"],
-    highlight: false,
-  }
-
-  test! {
-    name: no_deps,
-    args: ["--no-deps"],
-    no_dependencies: true,
-  }
-
-  test! {
-    name: no_dependencies,
-    args: ["--no-dependencies"],
-    no_dependencies: true,
-  }
-
-  test! {
-    name: unsorted_default,
-    args: [],
-    unsorted: false,
-  }
-
-  test! {
-    name: unsorted_long,
-    args: ["--unsorted"],
-    unsorted: true,
-  }
-
-  test! {
-    name: unsorted_short,
-    args: ["-u"],
-    unsorted: true,
-  }
-
-  test! {
-    name: quiet_default,
-    args: [],
-    verbosity: Verbosity::Taciturn,
-  }
-
-  test! {
-    name: quiet_long,
-    args: ["--quiet"],
-    verbosity: Verbosity::Quiet,
-  }
-
-  test! {
-    name: quiet_short,
-    args: ["-q"],
-    verbosity: Verbosity::Quiet,
-  }
-
-  error! {
-    name: dotenv_both_filename_and_path,
-    args: ["--dotenv-filename", "foo", "--dotenv-path", "bar"],
-  }
-
-  test! {
-    name: set_default,
-    args: [],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!(),
-    },
-  }
-
-  test! {
-    name: set_one,
-    args: ["--set", "foo", "bar"],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "bar"},
-    },
-  }
-
-  test! {
-    name: set_empty,
-    args: ["--set", "foo", ""],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": ""},
-    },
-  }
-
-  test! {
-    name: set_two,
-    args: ["--set", "foo", "bar", "--set", "bar", "baz"],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "bar", "bar": "baz"},
-    },
-  }
-
-  test! {
-    name: set_override,
-    args: ["--set", "foo", "bar", "--set", "foo", "baz"],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "baz"},
-    },
-  }
-
-  error! {
-    name: set_bad,
-    args: ["--set", "foo"],
-  }
-
-  test! {
-    name: shell_default,
-    args: [],
-    shell: None,
-    shell_args: None,
-  }
-
-  test! {
-    name: shell_set,
-    args: ["--shell", "tclsh"],
-    shell: Some("tclsh".to_owned()),
-  }
-
-  test! {
-    name: shell_args_set,
-    args: ["--shell-arg", "hello"],
-    shell: None,
-    shell_args: Some(vec!["hello".into()]),
-  }
-
-  test! {
-    name: verbosity_default,
-    args: [],
-    verbosity: Verbosity::Taciturn,
-  }
-
-  test! {
-    name: verbosity_long,
-    args: ["--verbose"],
-    verbosity: Verbosity::Loquacious,
-  }
-
-  test! {
-    name: verbosity_loquacious,
-    args: ["-v"],
-    verbosity: Verbosity::Loquacious,
-  }
-
-  test! {
-    name: verbosity_grandiloquent,
-    args: ["-v", "-v"],
-    verbosity: Verbosity::Grandiloquent,
-  }
-
-  test! {
-    name: verbosity_great_grandiloquent,
-    args: ["-v", "-v", "-v"],
-    verbosity: Verbosity::Grandiloquent,
-  }
-
-  test! {
-    name: subcommand_default,
-    args: [],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{},
-    },
-  }
-
-  error! {
-    name: subcommand_conflict_changelog,
-    args: ["--list", "--changelog"],
-  }
-
-  error! {
-    name: subcommand_conflict_summary,
-    args: ["--list", "--summary"],
-  }
-
-  error! {
-    name: subcommand_conflict_dump,
-    args: ["--list", "--dump"],
-  }
-
-  error! {
-    name: subcommand_conflict_fmt,
-    args: ["--list", "--fmt"],
-  }
-
-  error! {
-    name: subcommand_conflict_init,
-    args: ["--list", "--init"],
-  }
-
-  error! {
-    name: subcommand_conflict_evaluate,
-    args: ["--list", "--evaluate"],
-  }
-
-  error! {
-    name: subcommand_conflict_show,
-    args: ["--list", "--show"],
-  }
-
-  error! {
-    name: subcommand_conflict_completions,
-    args: ["--list", "--completions"],
-  }
-
-  error! {
-    name: subcommand_conflict_variables,
-    args: ["--list", "--variables"],
-  }
-
-  error! {
-    name: subcommand_conflict_choose,
-    args: ["--list", "--choose"],
-  }
-
-  test! {
-    name: subcommand_completions,
-    args: ["--completions", "bash"],
-    subcommand: Subcommand::Completions{ shell: completions::Shell::Bash },
-  }
-
-  test! {
-    name: subcommand_completions_uppercase,
-    args: ["--completions", "BASH"],
-    subcommand: Subcommand::Completions{ shell: completions::Shell::Bash },
-  }
-
-  error! {
-    name: subcommand_completions_invalid,
-    args: ["--completions", "monstersh"],
-  }
-
-  test! {
-    name: subcommand_dump,
-    args: ["--dump"],
-    subcommand: Subcommand::Dump,
-  }
-
-  test! {
-    name: dump_format,
-    args: ["--dump-format", "json"],
-    dump_format: DumpFormat::Json,
-  }
-
-  test! {
-    name: subcommand_edit,
-    args: ["--edit"],
-    subcommand: Subcommand::Edit,
-  }
-
-  test! {
-    name: subcommand_evaluate,
-    args: ["--evaluate"],
-    subcommand: Subcommand::Evaluate {
-      overrides: map!{},
-      variable: None,
-    },
-  }
-
-  test! {
-    name: subcommand_evaluate_overrides,
-    args: ["--evaluate", "x=y"],
-    subcommand: Subcommand::Evaluate {
-      overrides: map!{"x": "y"},
-      variable: None,
-    },
-  }
-
-  test! {
-    name: subcommand_evaluate_overrides_with_argument,
-    args: ["--evaluate", "x=y", "foo"],
-    subcommand: Subcommand::Evaluate {
-      overrides: map!{"x": "y"},
-      variable: Some("foo".to_owned()),
-    },
-  }
-
-  test! {
-    name: subcommand_list_long,
-    args: ["--list"],
-    subcommand: Subcommand::List{ path: ModulePath { path: Vec::new(), spaced: false } },
-  }
-
-  test! {
-    name: subcommand_list_short,
-    args: ["-l"],
-    subcommand: Subcommand::List{ path: ModulePath { path: Vec::new(), spaced: false } },
-  }
-
-  test! {
-    name: subcommand_list_arguments,
-    args: ["--list", "bar"],
-    subcommand: Subcommand::List{ path: ModulePath { path: vec!["bar".into()], spaced: false } },
-  }
-
-  test! {
-    name: subcommand_show_long,
-    args: ["--show", "build"],
-    subcommand: Subcommand::Show { path: ModulePath { path: vec!["build".into()], spaced: false } },
-  }
-
-  test! {
-    name: subcommand_show_short,
-    args: ["-s", "build"],
-    subcommand: Subcommand::Show { path: ModulePath { path: vec!["build".into()], spaced: false } },
-  }
-
-  test! {
-    name: subcommand_show_multiple_args,
-    args: ["--show", "foo", "bar"],
-    subcommand: Subcommand::Show {
-      path: ModulePath {
-        path: vec!["foo".into(), "bar".into()],
-        spaced: true,
+    test! {
+      name: default_config,
+      args: [],
+    }
+
+    test! {
+      name: color_default,
+      args: [],
+      color: Color::auto(),
+    }
+
+    test! {
+      name: color_never,
+      args: ["--color", "never"],
+      color: Color::never(),
+    }
+
+    test! {
+      name: color_always,
+      args: ["--color", "always"],
+      color: Color::always(),
+    }
+
+    test! {
+      name: color_auto,
+      args: ["--color", "auto"],
+      color: Color::auto(),
+    }
+
+    error! {
+      name: color_bad_value,
+      args: ["--color", "foo"],
+    }
+
+    test! {
+      name: dry_run_default,
+      args: [],
+      dry_run: false,
+    }
+
+    test! {
+      name: dry_run_long,
+      args: ["--dry-run"],
+      dry_run: true,
+    }
+
+    test! {
+      name: dry_run_short,
+      args: ["-n"],
+      dry_run: true,
+    }
+
+    error! {
+      name: dry_run_quiet,
+      args: ["--dry-run", "--quiet"],
+    }
+
+    test! {
+      name: highlight_default,
+      args: [],
+      highlight: true,
+    }
+
+    test! {
+      name: highlight_yes,
+      args: ["--highlight"],
+      highlight: true,
+    }
+
+    test! {
+      name: highlight_no,
+      args: ["--no-highlight"],
+      highlight: false,
+    }
+
+    test! {
+      name: highlight_no_yes,
+      args: ["--no-highlight", "--highlight"],
+      highlight: true,
+    }
+
+    test! {
+      name: highlight_no_yes_no,
+      args: ["--no-highlight", "--highlight", "--no-highlight"],
+      highlight: false,
+    }
+
+    test! {
+      name: highlight_yes_no,
+      args: ["--highlight", "--no-highlight"],
+      highlight: false,
+    }
+
+    test! {
+      name: no_deps,
+      args: ["--no-deps"],
+      no_dependencies: true,
+    }
+
+    test! {
+      name: no_dependencies,
+      args: ["--no-dependencies"],
+      no_dependencies: true,
+    }
+
+    test! {
+      name: unsorted_default,
+      args: [],
+      unsorted: false,
+    }
+
+    test! {
+      name: unsorted_long,
+      args: ["--unsorted"],
+      unsorted: true,
+    }
+
+    test! {
+      name: unsorted_short,
+      args: ["-u"],
+      unsorted: true,
+    }
+
+    test! {
+      name: quiet_default,
+      args: [],
+      verbosity: Verbosity::Taciturn,
+    }
+
+    test! {
+      name: quiet_long,
+      args: ["--quiet"],
+      verbosity: Verbosity::Quiet,
+    }
+
+    test! {
+      name: quiet_short,
+      args: ["-q"],
+      verbosity: Verbosity::Quiet,
+    }
+
+    error! {
+      name: dotenv_both_filename_and_path,
+      args: ["--dotenv-filename", "foo", "--dotenv-path", "bar"],
+    }
+
+    test! {
+      name: set_default,
+      args: [],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!(),
       },
-    },
-  }
+    }
 
-  test! {
-    name: subcommand_summary,
-    args: ["--summary"],
-    subcommand: Subcommand::Summary,
-    unstable: true,
-  }
+    test! {
+      name: set_one,
+      args: ["--set", "foo", "bar"],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "bar"},
+      },
+    }
 
-  test! {
-    name: arguments,
-    args: ["foo", "bar"],
-    subcommand: Subcommand::Run {
-      arguments: vec![String::from("foo"), String::from("bar")],
-      overrides: map!{},
-    },
-  }
+    test! {
+      name: set_empty,
+      args: ["--set", "foo", ""],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": ""},
+      },
+    }
 
-  test! {
-    name: arguments_leading_equals,
-    args: ["=foo"],
-    subcommand: Subcommand::Run {
-      arguments: vec!["=foo".to_owned()],
-      overrides: map!{},
-    },
-  }
+    test! {
+      name: set_two,
+      args: ["--set", "foo", "bar", "--set", "bar", "baz"],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "bar", "bar": "baz"},
+      },
+    }
 
-  test! {
-    name: overrides,
-    args: ["foo=bar", "bar=baz"],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "bar", "bar": "baz"},
-    },
-  }
+    test! {
+      name: set_override,
+      args: ["--set", "foo", "bar", "--set", "foo", "baz"],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "baz"},
+      },
+    }
 
-  test! {
-    name: overrides_empty,
-    args: ["foo=", "bar="],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "", "bar": ""},
-    },
-  }
+    error! {
+      name: set_bad,
+      args: ["--set", "foo"],
+    }
 
-  test! {
-    name: overrides_override_sets,
-    args: ["--set", "foo", "0", "--set", "bar", "1", "foo=bar", "bar=baz"],
-    subcommand: Subcommand::Run {
-      arguments: Vec::new(),
-      overrides: map!{"foo": "bar", "bar": "baz"},
-    },
-  }
+    test! {
+      name: shell_default,
+      args: [],
+      shell: None,
+      shell_args: None,
+    }
 
-  test! {
-    name: shell_args_default,
-    args: [],
-  }
+    test! {
+      name: shell_set,
+      args: ["--shell", "tclsh"],
+      shell: Some("tclsh".to_owned()),
+    }
 
-  test! {
-    name: shell_args_set_hyphen,
-    args: ["--shell-arg", "--foo"],
-    shell_args: Some(vec!["--foo".to_owned()]),
-  }
+    test! {
+      name: shell_args_set,
+      args: ["--shell-arg", "hello"],
+      shell: None,
+      shell_args: Some(vec!["hello".into()]),
+    }
 
-  test! {
-    name: shell_args_set_word,
-    args: ["--shell-arg", "foo"],
-    shell_args: Some(vec!["foo".to_owned()]),
-  }
+    test! {
+      name: verbosity_default,
+      args: [],
+      verbosity: Verbosity::Taciturn,
+    }
 
-  test! {
-    name: shell_args_set_multiple,
-    args: ["--shell-arg", "foo", "--shell-arg", "bar"],
-    shell_args: Some(vec!["foo".to_owned(), "bar".to_owned()]),
+    test! {
+      name: verbosity_long,
+      args: ["--verbose"],
+      verbosity: Verbosity::Loquacious,
+    }
 
-  }
+    test! {
+      name: verbosity_loquacious,
+      args: ["-v"],
+      verbosity: Verbosity::Loquacious,
+    }
 
-  test! {
-    name: shell_args_clear,
-    args: ["--clear-shell-args"],
-    shell_args: Some(Vec::new()),
+    test! {
+      name: verbosity_grandiloquent,
+      args: ["-v", "-v"],
+      verbosity: Verbosity::Grandiloquent,
+    }
 
-  }
+    test! {
+      name: verbosity_great_grandiloquent,
+      args: ["-v", "-v", "-v"],
+      verbosity: Verbosity::Grandiloquent,
+    }
 
-  test! {
-    name: shell_args_clear_and_set,
-    args: ["--clear-shell-args", "--shell-arg", "bar"],
-    shell_args: Some(vec!["bar".to_owned()]),
+    test! {
+      name: subcommand_default,
+      args: [],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{},
+      },
+    }
 
-  }
+    error! {
+      name: subcommand_conflict_changelog,
+      args: ["--list", "--changelog"],
+    }
 
-  test! {
-    name: shell_args_set_and_clear,
-    args: ["--shell-arg", "bar", "--clear-shell-args"],
-    shell_args: Some(Vec::new()),
+    error! {
+      name: subcommand_conflict_summary,
+      args: ["--list", "--summary"],
+    }
 
-  }
+    error! {
+      name: subcommand_conflict_dump,
+      args: ["--list", "--dump"],
+    }
 
-  test! {
-    name: shell_args_set_multiple_and_clear,
-    args: ["--shell-arg", "bar", "--shell-arg", "baz", "--clear-shell-args"],
-    shell_args: Some(Vec::new()),
+    error! {
+      name: subcommand_conflict_fmt,
+      args: ["--list", "--fmt"],
+    }
 
-  }
+    error! {
+      name: subcommand_conflict_init,
+      args: ["--list", "--init"],
+    }
 
-  test! {
-    name: search_config_default,
-    args: [],
-    search_config: SearchConfig::FromInvocationDirectory,
-  }
+    error! {
+      name: subcommand_conflict_evaluate,
+      args: ["--list", "--evaluate"],
+    }
 
-  test! {
-    name: search_config_from_working_directory_and_justfile,
-    args: ["--working-directory", "foo", "--justfile", "bar"],
-    search_config: SearchConfig::WithJustfileAndWorkingDirectory {
-      justfile: PathBuf::from("bar"),
-      working_directory: PathBuf::from("foo"),
-    },
-  }
+    error! {
+      name: subcommand_conflict_show,
+      args: ["--list", "--show"],
+    }
 
-  test! {
-    name: search_config_justfile_long,
-    args: ["--justfile", "foo"],
-    search_config: SearchConfig::WithJustfile {
-      justfile: PathBuf::from("foo"),
-    },
-  }
+    error! {
+      name: subcommand_conflict_completions,
+      args: ["--list", "--completions"],
+    }
 
-  test! {
-    name: search_config_justfile_short,
-    args: ["-f", "foo"],
-    search_config: SearchConfig::WithJustfile {
-      justfile: PathBuf::from("foo"),
-    },
-  }
+    error! {
+      name: subcommand_conflict_variables,
+      args: ["--list", "--variables"],
+    }
 
-  test! {
-    name: search_directory_parent,
-    args: ["../"],
-    search_config: SearchConfig::FromSearchDirectory {
-      search_directory: PathBuf::from(".."),
-    },
-  }
+    error! {
+      name: subcommand_conflict_choose,
+      args: ["--list", "--choose"],
+    }
 
-  test! {
-    name: search_directory_parent_with_recipe,
-    args: ["../build"],
-    search_config: SearchConfig::FromSearchDirectory {
-      search_directory: PathBuf::from(".."),
-    },
-    subcommand: Subcommand::Run { arguments: vec!["build".to_owned()], overrides: BTreeMap::new() },
-  }
+    test! {
+      name: subcommand_completions,
+      args: ["--completions", "bash"],
+      subcommand: Subcommand::Completions{ shell: completions::Shell::Bash },
+    }
 
-  test! {
-    name: search_directory_child,
-    args: ["foo/"],
-    search_config: SearchConfig::FromSearchDirectory {
-      search_directory: PathBuf::from("foo"),
-    },
-  }
+    test! {
+      name: subcommand_completions_uppercase,
+      args: ["--completions", "BASH"],
+      subcommand: Subcommand::Completions{ shell: completions::Shell::Bash },
+    }
 
-  test! {
-    name: search_directory_deep,
-    args: ["foo/bar/"],
-    search_config: SearchConfig::FromSearchDirectory {
-      search_directory: PathBuf::from("foo/bar"),
-    },
-  }
+    error! {
+      name: subcommand_completions_invalid,
+      args: ["--completions", "monstersh"],
+    }
 
-  test! {
-    name: search_directory_child_with_recipe,
-    args: ["foo/build"],
-    search_config: SearchConfig::FromSearchDirectory {
-      search_directory: PathBuf::from("foo"),
-    },
-    subcommand: Subcommand::Run { arguments: vec!["build".to_owned()], overrides: BTreeMap::new() },
-  }
+    test! {
+      name: subcommand_dump,
+      args: ["--dump"],
+      subcommand: Subcommand::Dump,
+    }
 
-  error! {
-    name: search_directory_conflict_justfile,
-    args: ["--justfile", "bar", "foo/build"],
-    error: ConfigError::SearchDirConflict,
-  }
+    test! {
+      name: dump_format,
+      args: ["--dump-format", "json"],
+      dump_format: DumpFormat::Json,
+    }
 
-  error! {
-    name: search_directory_conflict_working_directory,
-    args: ["--justfile", "bar", "--working-directory", "baz", "foo/build"],
-    error: ConfigError::SearchDirConflict,
-  }
+    test! {
+      name: subcommand_edit,
+      args: ["--edit"],
+      subcommand: Subcommand::Edit,
+    }
 
-  error_matches! {
-    name: completions_argument,
-    args: ["--completions", "foo"],
-    error: error,
-    check: {
-      assert_eq!(error.kind(), clap::error::ErrorKind::InvalidValue);
-      assert_eq!(error.context().collect::<Vec<_>>(), vec![
-        (
-          ContextKind::InvalidArg,
-          &ContextValue::String("--completions <SHELL>".into())),
-        (
-          ContextKind::InvalidValue,
-          &ContextValue::String("foo".into()),
-        ),
-        (
-          ContextKind::ValidValue,
-          &ContextValue::Strings([
-            "bash".into(),
-            "elvish".into(),
-            "fish".into(),
-            "nushell".into(),
-            "powershell".into(),
-            "zsh".into()].into()
+    test! {
+      name: subcommand_evaluate,
+      args: ["--evaluate"],
+      subcommand: Subcommand::Evaluate {
+        overrides: map!{},
+        variable: None,
+      },
+    }
+
+    test! {
+      name: subcommand_evaluate_overrides,
+      args: ["--evaluate", "x=y"],
+      subcommand: Subcommand::Evaluate {
+        overrides: map!{"x": "y"},
+        variable: None,
+      },
+    }
+
+    test! {
+      name: subcommand_evaluate_overrides_with_argument,
+      args: ["--evaluate", "x=y", "foo"],
+      subcommand: Subcommand::Evaluate {
+        overrides: map!{"x": "y"},
+        variable: Some("foo".to_owned()),
+      },
+    }
+
+    test! {
+      name: subcommand_list_long,
+      args: ["--list"],
+      subcommand: Subcommand::List{ path: ModulePath { path: Vec::new(), spaced: false } },
+    }
+
+    test! {
+      name: subcommand_list_short,
+      args: ["-l"],
+      subcommand: Subcommand::List{ path: ModulePath { path: Vec::new(), spaced: false } },
+    }
+
+    test! {
+      name: subcommand_list_arguments,
+      args: ["--list", "bar"],
+      subcommand: Subcommand::List{ path: ModulePath { path: vec!["bar".into()], spaced: false } },
+    }
+
+    test! {
+      name: subcommand_show_long,
+      args: ["--show", "build"],
+      subcommand: Subcommand::Show { path: ModulePath { path: vec!["build".into()], spaced: false } },
+    }
+
+    test! {
+      name: subcommand_show_short,
+      args: ["-s", "build"],
+      subcommand: Subcommand::Show { path: ModulePath { path: vec!["build".into()], spaced: false } },
+    }
+
+    test! {
+      name: subcommand_show_multiple_args,
+      args: ["--show", "foo", "bar"],
+      subcommand: Subcommand::Show {
+        path: ModulePath {
+          path: vec!["foo".into(), "bar".into()],
+          spaced: true,
+        },
+      },
+    }
+
+    test! {
+      name: subcommand_summary,
+      args: ["--summary"],
+      subcommand: Subcommand::Summary,
+      unstable: true,
+    }
+
+    test! {
+      name: arguments,
+      args: ["foo", "bar"],
+      subcommand: Subcommand::Run {
+        arguments: vec![String::from("foo"), String::from("bar")],
+        overrides: map!{},
+      },
+    }
+
+    test! {
+      name: arguments_leading_equals,
+      args: ["=foo"],
+      subcommand: Subcommand::Run {
+        arguments: vec!["=foo".to_owned()],
+        overrides: map!{},
+      },
+    }
+
+    test! {
+      name: overrides,
+      args: ["foo=bar", "bar=baz"],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "bar", "bar": "baz"},
+      },
+    }
+
+    test! {
+      name: overrides_empty,
+      args: ["foo=", "bar="],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "", "bar": ""},
+      },
+    }
+
+    test! {
+      name: overrides_override_sets,
+      args: ["--set", "foo", "0", "--set", "bar", "1", "foo=bar", "bar=baz"],
+      subcommand: Subcommand::Run {
+        arguments: Vec::new(),
+        overrides: map!{"foo": "bar", "bar": "baz"},
+      },
+    }
+
+    test! {
+      name: shell_args_default,
+      args: [],
+    }
+
+    test! {
+      name: shell_args_set_hyphen,
+      args: ["--shell-arg", "--foo"],
+      shell_args: Some(vec!["--foo".to_owned()]),
+    }
+
+    test! {
+      name: shell_args_set_word,
+      args: ["--shell-arg", "foo"],
+      shell_args: Some(vec!["foo".to_owned()]),
+    }
+
+    test! {
+      name: shell_args_set_multiple,
+      args: ["--shell-arg", "foo", "--shell-arg", "bar"],
+      shell_args: Some(vec!["foo".to_owned(), "bar".to_owned()]),
+
+    }
+
+    test! {
+      name: shell_args_clear,
+      args: ["--clear-shell-args"],
+      shell_args: Some(Vec::new()),
+
+    }
+
+    test! {
+      name: shell_args_clear_and_set,
+      args: ["--clear-shell-args", "--shell-arg", "bar"],
+      shell_args: Some(vec!["bar".to_owned()]),
+
+    }
+
+    test! {
+      name: shell_args_set_and_clear,
+      args: ["--shell-arg", "bar", "--clear-shell-args"],
+      shell_args: Some(Vec::new()),
+
+    }
+
+    test! {
+      name: shell_args_set_multiple_and_clear,
+      args: ["--shell-arg", "bar", "--shell-arg", "baz", "--clear-shell-args"],
+      shell_args: Some(Vec::new()),
+
+    }
+
+    test! {
+      name: search_config_default,
+      args: [],
+      search_config: SearchConfig::FromInvocationDirectory,
+    }
+
+    test! {
+      name: search_config_from_working_directory_and_justfile,
+      args: ["--working-directory", "foo", "--justfile", "bar"],
+      search_config: SearchConfig::WithJustfileAndWorkingDirectory {
+        justfile: PathBuf::from("bar"),
+        working_directory: PathBuf::from("foo"),
+      },
+    }
+
+    test! {
+      name: search_config_justfile_long,
+      args: ["--justfile", "foo"],
+      search_config: SearchConfig::WithJustfile {
+        justfile: PathBuf::from("foo"),
+      },
+    }
+
+    test! {
+      name: search_config_justfile_short,
+      args: ["-f", "foo"],
+      search_config: SearchConfig::WithJustfile {
+        justfile: PathBuf::from("foo"),
+      },
+    }
+
+    test! {
+      name: search_directory_parent,
+      args: ["../"],
+      search_config: SearchConfig::FromSearchDirectory {
+        search_directory: PathBuf::from(".."),
+      },
+    }
+
+    test! {
+      name: search_directory_parent_with_recipe,
+      args: ["../build"],
+      search_config: SearchConfig::FromSearchDirectory {
+        search_directory: PathBuf::from(".."),
+      },
+      subcommand: Subcommand::Run { arguments: vec!["build".to_owned()], overrides: BTreeMap::new() },
+    }
+
+    test! {
+      name: search_directory_child,
+      args: ["foo/"],
+      search_config: SearchConfig::FromSearchDirectory {
+        search_directory: PathBuf::from("foo"),
+      },
+    }
+
+    test! {
+      name: search_directory_deep,
+      args: ["foo/bar/"],
+      search_config: SearchConfig::FromSearchDirectory {
+        search_directory: PathBuf::from("foo/bar"),
+      },
+    }
+
+    test! {
+      name: search_directory_child_with_recipe,
+      args: ["foo/build"],
+      search_config: SearchConfig::FromSearchDirectory {
+        search_directory: PathBuf::from("foo"),
+      },
+      subcommand: Subcommand::Run { arguments: vec!["build".to_owned()], overrides: BTreeMap::new() },
+    }
+
+    error! {
+      name: search_directory_conflict_justfile,
+      args: ["--justfile", "bar", "foo/build"],
+      error: ConfigError::SearchDirConflict,
+    }
+
+    error! {
+      name: search_directory_conflict_working_directory,
+      args: ["--justfile", "bar", "--working-directory", "baz", "foo/build"],
+      error: ConfigError::SearchDirConflict,
+    }
+
+    error_matches! {
+      name: completions_argument,
+      args: ["--completions", "foo"],
+      error: error,
+      check: {
+        assert_eq!(error.kind(), clap::error::ErrorKind::InvalidValue);
+        assert_eq!(error.context().collect::<Vec<_>>(), vec![
+          (
+            ContextKind::InvalidArg,
+            &ContextValue::String("--completions <SHELL>".into())),
+          (
+            ContextKind::InvalidValue,
+            &ContextValue::String("foo".into()),
           ),
-        ),
-      ]);
-    },
-  }
+          (
+            ContextKind::ValidValue,
+            &ContextValue::Strings([
+              "bash".into(),
+              "elvish".into(),
+              "fish".into(),
+              "nushell".into(),
+              "powershell".into(),
+              "zsh".into()].into()
+            ),
+          ),
+        ]);
+      },
+    }
 
-  error! {
-    name: changelog_arguments,
-    args: ["--changelog", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::CHANGELOG);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: changelog_arguments,
+      args: ["--changelog", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::CHANGELOG);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: dump_arguments,
-    args: ["--dump", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::DUMP);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: dump_arguments,
+      args: ["--dump", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::DUMP);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: edit_arguments,
-    args: ["--edit", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::EDIT);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: edit_arguments,
+      args: ["--edit", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::EDIT);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: fmt_arguments,
-    args: ["--fmt", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::FORMAT);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: fmt_arguments,
+      args: ["--fmt", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::FORMAT);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: fmt_alias,
-    args: ["--format", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::FORMAT);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: fmt_alias,
+      args: ["--format", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::FORMAT);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: init_arguments,
-    args: ["--init", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::INIT);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: init_arguments,
+      args: ["--init", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::INIT);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: init_alias,
-    args: ["--initialize", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::INIT);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: init_alias,
+      args: ["--initialize", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::INIT);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: summary_arguments,
-    args: ["--summary", "bar"],
-    error: ConfigError::SubcommandArguments { subcommand, arguments },
-    check: {
-      assert_eq!(subcommand, cmd::SUMMARY);
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: summary_arguments,
+      args: ["--summary", "bar"],
+      error: ConfigError::SubcommandArguments { subcommand, arguments },
+      check: {
+        assert_eq!(subcommand, cmd::SUMMARY);
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: subcommand_overrides_and_arguments,
-    args: ["--summary", "bar=baz", "bar"],
-    error: ConfigError::SubcommandOverridesAndArguments { subcommand, arguments, overrides },
-    check: {
-      assert_eq!(subcommand, cmd::SUMMARY);
-      assert_eq!(overrides, map!{"bar": "baz"});
-      assert_eq!(arguments, &["bar"]);
-    },
-  }
+    error! {
+      name: subcommand_overrides_and_arguments,
+      args: ["--summary", "bar=baz", "bar"],
+      error: ConfigError::SubcommandOverridesAndArguments { subcommand, arguments, overrides },
+      check: {
+        assert_eq!(subcommand, cmd::SUMMARY);
+        assert_eq!(overrides, map!{"bar": "baz"});
+        assert_eq!(arguments, &["bar"]);
+      },
+    }
 
-  error! {
-    name: summary_overrides,
-    args: ["--summary", "bar=baz"],
-    error: ConfigError::SubcommandOverrides { subcommand, overrides },
-    check: {
-      assert_eq!(subcommand, cmd::SUMMARY);
-      assert_eq!(overrides, map!{"bar": "baz"});
-    },
-  }
+    error! {
+      name: summary_overrides,
+      args: ["--summary", "bar=baz"],
+      error: ConfigError::SubcommandOverrides { subcommand, overrides },
+      check: {
+        assert_eq!(subcommand, cmd::SUMMARY);
+        assert_eq!(overrides, map!{"bar": "baz"});
+      },
+    }
 }

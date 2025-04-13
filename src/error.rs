@@ -2,271 +2,271 @@ use super::*;
 
 #[derive(Debug)]
 pub enum Error<'src> {
-  AmbiguousModuleFile {
-    module: Name<'src>,
-    found: Vec<PathBuf>,
-  },
-  ArgumentCountMismatch {
-    recipe: &'src str,
-    parameters: Vec<Parameter<'src>>,
-    found: usize,
-    min: usize,
-    max: usize,
-  },
-  Assert {
-    message: String,
-  },
-  Backtick {
-    token: Token<'src>,
-    output_error: OutputError,
-  },
-  RuntimeDirIo {
-    io_error: io::Error,
-    path: PathBuf,
-  },
-  ChooserInvoke {
-    shell_binary: String,
-    shell_arguments: String,
-    chooser: OsString,
-    io_error: io::Error,
-  },
-  ChooserRead {
-    chooser: OsString,
-    io_error: io::Error,
-  },
-  ChooserStatus {
-    chooser: OsString,
-    status: ExitStatus,
-  },
-  ChooserWrite {
-    chooser: OsString,
-    io_error: io::Error,
-  },
-  CircularImport {
-    current: PathBuf,
-    import: PathBuf,
-  },
-  Code {
-    recipe: &'src str,
-    line_number: Option<usize>,
-    code: i32,
-    print_message: bool,
-  },
-  CommandInvoke {
-    binary: OsString,
-    arguments: Vec<OsString>,
-    io_error: io::Error,
-  },
-  CommandStatus {
-    binary: OsString,
-    arguments: Vec<OsString>,
-    status: ExitStatus,
-  },
-  Compile {
-    compile_error: CompileError<'src>,
-  },
-  Config {
-    config_error: ConfigError,
-  },
-  Cygpath {
-    recipe: &'src str,
-    output_error: OutputError,
-  },
-  DefaultRecipeRequiresArguments {
-    recipe: &'src str,
-    min_arguments: usize,
-  },
-  Dotenv {
-    dotenv_error: dotenvy::Error,
-  },
-  DotenvRequired,
-  DumpJson {
-    serde_json_error: serde_json::Error,
-  },
-  EditorInvoke {
-    editor: OsString,
-    io_error: io::Error,
-  },
-  EditorStatus {
-    editor: OsString,
-    status: ExitStatus,
-  },
-  EvalUnknownVariable {
-    variable: String,
-    suggestion: Option<Suggestion<'src>>,
-  },
-  ExcessInvocations {
-    invocations: usize,
-  },
-  ExpectedSubmoduleButFoundRecipe {
-    path: String,
-  },
-  FormatCheckFoundDiff,
-  FunctionCall {
-    function: Name<'src>,
-    message: String,
-  },
-  GetConfirmation {
-    io_error: io::Error,
-  },
-  Homedir,
-  InitExists {
-    justfile: PathBuf,
-  },
-  Internal {
-    message: String,
-  },
-  Io {
-    recipe: &'src str,
-    io_error: io::Error,
-  },
-  Load {
-    path: PathBuf,
-    io_error: io::Error,
-  },
-  MissingImportFile {
-    path: Token<'src>,
-  },
-  MissingModuleFile {
-    module: Name<'src>,
-  },
-  NoChoosableRecipes,
-  NoDefaultRecipe,
-  NoRecipes,
-  NotConfirmed {
-    recipe: &'src str,
-  },
-  RegexCompile {
-    source: regex::Error,
-  },
-  Script {
-    command: String,
-    io_error: io::Error,
-    recipe: &'src str,
-  },
-  Search {
-    search_error: SearchError,
-  },
-  Shebang {
-    argument: Option<String>,
-    command: String,
-    io_error: io::Error,
-    recipe: &'src str,
-  },
-  Signal {
-    recipe: &'src str,
-    line_number: Option<usize>,
-    signal: i32,
-  },
-  StdoutIo {
-    io_error: io::Error,
-  },
-  TempdirIo {
-    recipe: &'src str,
-    io_error: io::Error,
-  },
-  TempfileIo {
-    io_error: io::Error,
-  },
-  Unknown {
-    recipe: &'src str,
-    line_number: Option<usize>,
-  },
-  UnknownSubmodule {
-    path: String,
-  },
-  UnknownOverrides {
-    overrides: Vec<String>,
-  },
-  UnknownRecipe {
-    recipe: String,
-    suggestion: Option<Suggestion<'src>>,
-  },
-  UnstableFeature {
-    unstable_feature: UnstableFeature,
-  },
-  WriteJustfile {
-    justfile: PathBuf,
-    io_error: io::Error,
-  },
+    AmbiguousModuleFile {
+        module: Name<'src>,
+        found: Vec<PathBuf>,
+    },
+    ArgumentCountMismatch {
+        recipe: &'src str,
+        parameters: Vec<Parameter<'src>>,
+        found: usize,
+        min: usize,
+        max: usize,
+    },
+    Assert {
+        message: String,
+    },
+    Backtick {
+        token: Token<'src>,
+        output_error: OutputError,
+    },
+    RuntimeDirIo {
+        io_error: io::Error,
+        path: PathBuf,
+    },
+    ChooserInvoke {
+        shell_binary: String,
+        shell_arguments: String,
+        chooser: OsString,
+        io_error: io::Error,
+    },
+    ChooserRead {
+        chooser: OsString,
+        io_error: io::Error,
+    },
+    ChooserStatus {
+        chooser: OsString,
+        status: ExitStatus,
+    },
+    ChooserWrite {
+        chooser: OsString,
+        io_error: io::Error,
+    },
+    CircularImport {
+        current: PathBuf,
+        import: PathBuf,
+    },
+    Code {
+        recipe: &'src str,
+        line_number: Option<usize>,
+        code: i32,
+        print_message: bool,
+    },
+    CommandInvoke {
+        binary: OsString,
+        arguments: Vec<OsString>,
+        io_error: io::Error,
+    },
+    CommandStatus {
+        binary: OsString,
+        arguments: Vec<OsString>,
+        status: ExitStatus,
+    },
+    Compile {
+        compile_error: CompileError<'src>,
+    },
+    Config {
+        config_error: ConfigError,
+    },
+    Cygpath {
+        recipe: &'src str,
+        output_error: OutputError,
+    },
+    DefaultRecipeRequiresArguments {
+        recipe: &'src str,
+        min_arguments: usize,
+    },
+    Dotenv {
+        dotenv_error: dotenvy::Error,
+    },
+    DotenvRequired,
+    DumpJson {
+        serde_json_error: serde_json::Error,
+    },
+    EditorInvoke {
+        editor: OsString,
+        io_error: io::Error,
+    },
+    EditorStatus {
+        editor: OsString,
+        status: ExitStatus,
+    },
+    EvalUnknownVariable {
+        variable: String,
+        suggestion: Option<Suggestion<'src>>,
+    },
+    ExcessInvocations {
+        invocations: usize,
+    },
+    ExpectedSubmoduleButFoundRecipe {
+        path: String,
+    },
+    FormatCheckFoundDiff,
+    FunctionCall {
+        function: Name<'src>,
+        message: String,
+    },
+    GetConfirmation {
+        io_error: io::Error,
+    },
+    Homedir,
+    InitExists {
+        justfile: PathBuf,
+    },
+    Internal {
+        message: String,
+    },
+    Io {
+        recipe: &'src str,
+        io_error: io::Error,
+    },
+    Load {
+        path: PathBuf,
+        io_error: io::Error,
+    },
+    MissingImportFile {
+        path: Token<'src>,
+    },
+    MissingModuleFile {
+        module: Name<'src>,
+    },
+    NoChoosableRecipes,
+    NoDefaultRecipe,
+    NoRecipes,
+    NotConfirmed {
+        recipe: &'src str,
+    },
+    RegexCompile {
+        source: regex::Error,
+    },
+    Script {
+        command: String,
+        io_error: io::Error,
+        recipe: &'src str,
+    },
+    Search {
+        search_error: SearchError,
+    },
+    Shebang {
+        argument: Option<String>,
+        command: String,
+        io_error: io::Error,
+        recipe: &'src str,
+    },
+    Signal {
+        recipe: &'src str,
+        line_number: Option<usize>,
+        signal: i32,
+    },
+    StdoutIo {
+        io_error: io::Error,
+    },
+    TempdirIo {
+        recipe: &'src str,
+        io_error: io::Error,
+    },
+    TempfileIo {
+        io_error: io::Error,
+    },
+    Unknown {
+        recipe: &'src str,
+        line_number: Option<usize>,
+    },
+    UnknownSubmodule {
+        path: String,
+    },
+    UnknownOverrides {
+        overrides: Vec<String>,
+    },
+    UnknownRecipe {
+        recipe: String,
+        suggestion: Option<Suggestion<'src>>,
+    },
+    UnstableFeature {
+        unstable_feature: UnstableFeature,
+    },
+    WriteJustfile {
+        justfile: PathBuf,
+        io_error: io::Error,
+    },
 }
 
 impl<'src> Error<'src> {
-  pub fn code(&self) -> Option<i32> {
-    match self {
-      Self::Code { code, .. }
-      | Self::Backtick {
-        output_error: OutputError::Code(code),
-        ..
-      } => Some(*code),
-      Self::ChooserStatus { status, .. } | Self::EditorStatus { status, .. } => status.code(),
-      _ => None,
+    pub fn code(&self) -> Option<i32> {
+        match self {
+            Self::Code { code, .. } |
+            Self::Backtick {
+                output_error: OutputError::Code(code),
+                ..
+            } => Some(*code),
+            Self::ChooserStatus { status, .. } | Self::EditorStatus { status, .. } => status.code(),
+            _ => None,
+        }
     }
-  }
 
-  fn context(&self) -> Option<Token<'src>> {
-    match self {
-      Self::AmbiguousModuleFile { module, .. } | Self::MissingModuleFile { module, .. } => {
-        Some(module.token)
-      }
-      Self::Backtick { token, .. } => Some(*token),
-      Self::Compile { compile_error } => Some(compile_error.context()),
-      Self::FunctionCall { function, .. } => Some(function.token),
-      Self::MissingImportFile { path } => Some(*path),
-      _ => None,
+    fn context(&self) -> Option<Token<'src>> {
+        match self {
+            Self::AmbiguousModuleFile { module, .. } | Self::MissingModuleFile { module, .. } => {
+                Some(module.token)
+            },
+            Self::Backtick { token, .. } => Some(*token),
+            Self::Compile { compile_error } => Some(compile_error.context()),
+            Self::FunctionCall { function, .. } => Some(function.token),
+            Self::MissingImportFile { path } => Some(*path),
+            _ => None,
+        }
     }
-  }
 
-  pub fn internal(message: impl Into<String>) -> Self {
-    Self::Internal {
-      message: message.into(),
+    pub fn internal(message: impl Into<String>) -> Self {
+        Self::Internal {
+            message: message.into(),
+        }
     }
-  }
 
-  pub fn print_message(&self) -> bool {
-    !matches!(
-      self,
-      Error::Code {
-        print_message: false,
-        ..
-      }
-    )
-  }
+    pub fn print_message(&self) -> bool {
+        !matches!(
+            self,
+            Error::Code {
+                print_message: false,
+                ..
+            }
+        )
+    }
 }
 
 impl<'src> From<CompileError<'src>> for Error<'src> {
-  fn from(compile_error: CompileError<'src>) -> Self {
-    Self::Compile { compile_error }
-  }
+    fn from(compile_error: CompileError<'src>) -> Self {
+        Self::Compile { compile_error }
+    }
 }
 
 impl<'src> From<ConfigError> for Error<'src> {
-  fn from(config_error: ConfigError) -> Self {
-    Self::Config { config_error }
-  }
+    fn from(config_error: ConfigError) -> Self {
+        Self::Config { config_error }
+    }
 }
 
 impl<'src> From<dotenvy::Error> for Error<'src> {
-  fn from(dotenv_error: dotenvy::Error) -> Error<'src> {
-    Self::Dotenv { dotenv_error }
-  }
+    fn from(dotenv_error: dotenvy::Error) -> Error<'src> {
+        Self::Dotenv { dotenv_error }
+    }
 }
 
 impl<'src> From<SearchError> for Error<'src> {
-  fn from(search_error: SearchError) -> Self {
-    Self::Search { search_error }
-  }
+    fn from(search_error: SearchError) -> Self {
+        Self::Search { search_error }
+    }
 }
 
 impl<'src> ColorDisplay for Error<'src> {
-  fn fmt(&self, f: &mut Formatter, color: Color) -> fmt::Result {
-    use Error::*;
+    fn fmt(&self, f: &mut Formatter, color: Color) -> fmt::Result {
+        use Error::*;
 
-    let error = color.error().paint("error");
-    let message = color.message().prefix();
-    write!(f, "{error}: {message}")?;
+        let error = color.error().paint("error");
+        let message = color.message().prefix();
+        write!(f, "{error}: {message}")?;
 
-    match self {
+        match self {
       AmbiguousModuleFile { module, found } =>
         write!(f,
           "Found multiple source files for module `{module}`: {}",
@@ -482,32 +482,32 @@ impl<'src> ColorDisplay for Error<'src> {
       }
     }
 
-    write!(f, "{}", color.message().suffix())?;
+        write!(f, "{}", color.message().suffix())?;
 
-    if let ArgumentCountMismatch {
-      recipe, parameters, ..
-    } = self
-    {
-      writeln!(f)?;
-      write!(f, "{}:\n    just {recipe}", color.message().paint("usage"))?;
-      for param in parameters {
-        write!(f, " {}", param.color_display(color))?;
-      }
+        if let ArgumentCountMismatch {
+            recipe, parameters, ..
+        } = self
+        {
+            writeln!(f)?;
+            write!(f, "{}:\n    just {recipe}", color.message().paint("usage"))?;
+            for param in parameters {
+                write!(f, " {}", param.color_display(color))?;
+            }
+        }
+
+        if let Some(token) = self.context() {
+            writeln!(f)?;
+            write!(f, "{}", token.color_display(color.error()))?;
+        }
+
+        Ok(())
     }
-
-    if let Some(token) = self.context() {
-      writeln!(f)?;
-      write!(f, "{}", token.color_display(color.error()))?;
-    }
-
-    Ok(())
-  }
 }
 
 fn format_cmd(binary: &OsString, arguments: &Vec<OsString>) -> String {
-  iter::once(binary)
-    .chain(arguments)
-    .map(|value| Enclosure::tick(value.to_string_lossy()).to_string())
-    .collect::<Vec<String>>()
-    .join(" ")
+    iter::once(binary)
+        .chain(arguments)
+        .map(|value| Enclosure::tick(value.to_string_lossy()).to_string())
+        .collect::<Vec<String>>()
+        .join(" ")
 }

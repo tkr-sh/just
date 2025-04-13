@@ -2,15 +2,15 @@ use super::*;
 
 #[test]
 fn bugfix() {
-  let mut justfile = String::from("foo: (x ");
-  for _ in 0..500 {
-    justfile.push('(');
-  }
-  Test::new()
-    .justfile(&justfile)
-    .stderr(RECURSION_LIMIT_REACHED)
-    .status(EXIT_FAILURE)
-    .run();
+    let mut justfile = String::from("foo: (x ");
+    for _ in 0..500 {
+        justfile.push('(');
+    }
+    Test::new()
+        .justfile(&justfile)
+        .stderr(RECURSION_LIMIT_REACHED)
+        .status(EXIT_FAILURE)
+        .run();
 }
 
 #[cfg(not(windows))]

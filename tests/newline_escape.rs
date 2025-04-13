@@ -2,9 +2,9 @@ use super::*;
 
 #[test]
 fn newline_escape_deps() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       default: a \\
                b \\
                c
@@ -15,17 +15,17 @@ fn newline_escape_deps() {
       c:
         echo c
     ",
-    )
-    .stdout("a\nb\nc\n")
-    .stderr("echo a\necho b\necho c\n")
-    .run();
+        )
+        .stdout("a\nb\nc\n")
+        .stderr("echo a\necho b\necho c\n")
+        .run();
 }
 
 #[test]
 fn newline_escape_deps_no_indent() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       default: a\\
       b\\
       c
@@ -36,17 +36,17 @@ fn newline_escape_deps_no_indent() {
       c:
         echo c
     ",
-    )
-    .stdout("a\nb\nc\n")
-    .stderr("echo a\necho b\necho c\n")
-    .run();
+        )
+        .stdout("a\nb\nc\n")
+        .stderr("echo a\necho b\necho c\n")
+        .run();
 }
 
 #[test]
 fn newline_escape_deps_linefeed() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         default: a\\\r
                 b
         a:
@@ -54,51 +54,51 @@ fn newline_escape_deps_linefeed() {
         b:
           echo b
       ",
-    )
-    .stdout("a\nb\n")
-    .stderr("echo a\necho b\n")
-    .run();
+        )
+        .stdout("a\nb\n")
+        .stderr("echo a\necho b\n")
+        .run();
 }
 
 #[test]
 fn newline_escape_deps_invalid_esc() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       default: a\\ b
     ",
-    )
-    .stdout("")
-    .stderr(
-      "
+        )
+        .stdout("")
+        .stderr(
+            "
         error: `\\ ` is not a valid escape sequence
          ——▶ justfile:1:11
           │
         1 │ default: a\\ b
           │           ^
       ",
-    )
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .status(EXIT_FAILURE)
+        .run();
 }
 
 #[test]
 fn newline_escape_unpaired_linefeed() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
       default:\\\ra",
-    )
-    .stdout("")
-    .stderr(
-      "
+        )
+        .stdout("")
+        .stderr(
+            "
         error: Unpaired carriage return
          ——▶ justfile:1:9
           │
         1 │ default:\\\ra
           │         ^
       ",
-    )
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .status(EXIT_FAILURE)
+        .run();
 }

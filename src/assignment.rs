@@ -4,10 +4,10 @@ use super::*;
 pub type Assignment<'src> = Binding<'src, Expression<'src>>;
 
 impl<'src> Display for Assignment<'src> {
-  fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-    if self.export {
-      write!(f, "export ")?;
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        if self.export {
+            write!(f, "export ")?;
+        }
+        write!(f, "{} := {}", self.name, self.value)
     }
-    write!(f, "{} := {}", self.name, self.value)
-  }
 }

@@ -103,37 +103,37 @@ a Z="\t z":
 
 #[test]
 fn show_recipe_at_path() {
-  Test::new()
-    .write("foo.just", "bar:\n @echo MODULE")
-    .justfile(
-      "
+    Test::new()
+        .write("foo.just", "bar:\n @echo MODULE")
+        .justfile(
+            "
         mod foo
       ",
-    )
-    .args(["--show", "foo::bar"])
-    .stdout("bar:\n    @echo MODULE\n")
-    .run();
+        )
+        .args(["--show", "foo::bar"])
+        .stdout("bar:\n    @echo MODULE\n")
+        .run();
 }
 
 #[test]
 fn show_invalid_path() {
-  Test::new()
-    .args(["--show", "$hello"])
-    .stderr("error: Invalid module path `$hello`\n")
-    .status(1)
-    .run();
+    Test::new()
+        .args(["--show", "$hello"])
+        .stderr("error: Invalid module path `$hello`\n")
+        .status(1)
+        .run();
 }
 
 #[test]
 fn show_space_separated_path() {
-  Test::new()
-    .write("foo.just", "bar:\n @echo MODULE")
-    .justfile(
-      "
+    Test::new()
+        .write("foo.just", "bar:\n @echo MODULE")
+        .justfile(
+            "
         mod foo
       ",
-    )
-    .args(["--show", "foo bar"])
-    .stdout("bar:\n    @echo MODULE\n")
-    .run();
+        )
+        .args(["--show", "foo bar"])
+        .stdout("bar:\n    @echo MODULE\n")
+        .run();
 }

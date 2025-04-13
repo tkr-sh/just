@@ -1,39 +1,39 @@
 use {super::*, pretty_assertions::assert_eq};
 
 pub fn compile(src: &str) -> Justfile {
-  Compiler::test_compile(src).expect("expected successful compilation")
+    Compiler::test_compile(src).expect("expected successful compilation")
 }
 
 pub fn config(args: &[&str]) -> Config {
-  let mut args = Vec::from(args);
-  args.insert(0, "just");
+    let mut args = Vec::from(args);
+    args.insert(0, "just");
 
-  let app = Config::app();
+    let app = Config::app();
 
-  let matches = app.try_get_matches_from(args).unwrap();
+    let matches = app.try_get_matches_from(args).unwrap();
 
-  Config::from_matches(&matches).unwrap()
+    Config::from_matches(&matches).unwrap()
 }
 
 pub fn search(config: &Config) -> Search {
-  let working_directory = config.invocation_directory.clone();
-  let justfile = working_directory.join("justfile");
+    let working_directory = config.invocation_directory.clone();
+    let justfile = working_directory.join("justfile");
 
-  Search {
-    justfile,
-    working_directory,
-  }
+    Search {
+        justfile,
+        working_directory,
+    }
 }
 
 pub fn tempdir() -> tempfile::TempDir {
-  tempfile::Builder::new()
-    .prefix("just-test-tempdir")
-    .tempdir()
-    .expect("failed to create temporary directory")
+    tempfile::Builder::new()
+        .prefix("just-test-tempdir")
+        .tempdir()
+        .expect("failed to create temporary directory")
 }
 
 macro_rules! analysis_error {
-  (
+    (
       name:   $name:ident,
       input:  $input:expr,
       offset: $offset:expr,
@@ -42,51 +42,51 @@ macro_rules! analysis_error {
       width:  $width:expr,
       kind:   $kind:expr,
     ) => {
-    #[test]
-    fn $name() {
-      $crate::testing::analysis_error($input, $offset, $line, $column, $width, $kind);
-    }
-  };
+        #[test]
+        fn $name() {
+            $crate::testing::analysis_error($input, $offset, $line, $column, $width, $kind);
+        }
+    };
 }
 
 pub fn analysis_error(
-  src: &str,
-  offset: usize,
-  line: usize,
-  column: usize,
-  length: usize,
-  kind: CompileErrorKind,
+    src: &str,
+    offset: usize,
+    line: usize,
+    column: usize,
+    length: usize,
+    kind: CompileErrorKind,
 ) {
-  let tokens = Lexer::test_lex(src).expect("Lexing failed in parse test...");
+    let tokens = Lexer::test_lex(src).expect("Lexing failed in parse test...");
 
-  let ast = Parser::parse(0, &[], &Namepath::default(), &tokens, &PathBuf::new())
-    .expect("Parsing failed in analysis test...");
+    let ast = Parser::parse(0, &[], &Namepath::default(), &tokens, &PathBuf::new())
+        .expect("Parsing failed in analysis test...");
 
-  let root = PathBuf::from("justfile");
-  let mut asts: HashMap<PathBuf, Ast> = HashMap::new();
-  asts.insert(root.clone(), ast);
+    let root = PathBuf::from("justfile");
+    let mut asts: HashMap<PathBuf, Ast> = HashMap::new();
+    asts.insert(root.clone(), ast);
 
-  let mut paths: HashMap<PathBuf, PathBuf> = HashMap::new();
-  paths.insert("justfile".into(), "justfile".into());
+    let mut paths: HashMap<PathBuf, PathBuf> = HashMap::new();
+    paths.insert("justfile".into(), "justfile".into());
 
-  match Analyzer::analyze(&asts, None, &[], &[], None, &paths, &root) {
-    Ok(_) => panic!("Analysis unexpectedly succeeded"),
-    Err(have) => {
-      let want = CompileError {
-        token: Token {
-          kind: have.token.kind,
-          src,
-          offset,
-          line,
-          column,
-          length,
-          path: "justfile".as_ref(),
+    match Analyzer::analyze(&asts, None, &[], &[], None, &paths, &root) {
+        Ok(_) => panic!("Analysis unexpectedly succeeded"),
+        Err(have) => {
+            let want = CompileError {
+                token: Token {
+                    kind: have.token.kind,
+                    src,
+                    offset,
+                    line,
+                    column,
+                    length,
+                    path: "justfile".as_ref(),
+                },
+                kind: kind.into(),
+            };
+            assert_eq!(have, want);
         },
-        kind: kind.into(),
-      };
-      assert_eq!(have, want);
     }
-  }
 }
 
 macro_rules! run_error {

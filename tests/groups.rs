@@ -2,9 +2,9 @@ use super::*;
 
 #[test]
 fn list_with_groups() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group('alpha')]
         a:
         # Doc comment
@@ -20,10 +20,10 @@ fn list_with_groups() {
         [group('alpha')]
         f:
       ",
-    )
-    .arg("--list")
-    .stdout(
-      "
+        )
+        .arg("--list")
+        .stdout(
+            "
         Available recipes:
             c
 
@@ -40,15 +40,15 @@ fn list_with_groups() {
             [multi word group]
             d
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_with_groups_unsorted() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group('beta')]
         [group('alpha')]
         f:
@@ -70,10 +70,10 @@ fn list_with_groups_unsorted() {
         a:
 
       ",
-    )
-    .args(["--list", "--unsorted"])
-    .stdout(
-      "
+        )
+        .args(["--list", "--unsorted"])
+        .stdout(
+            "
         Available recipes:
             c
 
@@ -90,15 +90,15 @@ fn list_with_groups_unsorted() {
             [multi word group]
             d
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_with_groups_unsorted_group_order() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group('y')]
         [group('x')]
         f:
@@ -111,10 +111,10 @@ fn list_with_groups_unsorted_group_order() {
 
         c:
       ",
-    )
-    .args(["--list", "--unsorted"])
-    .stdout(
-      "
+        )
+        .args(["--list", "--unsorted"])
+        .stdout(
+            "
         Available recipes:
             c
 
@@ -130,15 +130,15 @@ fn list_with_groups_unsorted_group_order() {
             [a]
             e
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group('B')]
         bar:
 
@@ -147,23 +147,23 @@ fn list_groups() {
         foo:
 
       ",
-    )
-    .args(["--groups"])
-    .stdout(
-      "
+        )
+        .args(["--groups"])
+        .stdout(
+            "
       Recipe groups:
           A
           B
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups_with_custom_prefix() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group('B')]
         foo:
 
@@ -171,46 +171,46 @@ fn list_groups_with_custom_prefix() {
         [group('B')]
         bar:
       ",
-    )
-    .args(["--groups", "--list-prefix", "..."])
-    .stdout(
-      "
+        )
+        .args(["--groups", "--list-prefix", "..."])
+        .stdout(
+            "
       Recipe groups:
       ...A
       ...B
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups_with_shorthand_syntax() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group: 'B']
         foo:
 
         [group: 'A', group: 'B']
         bar:
       ",
-    )
-    .arg("--groups")
-    .stdout(
-      "
+        )
+        .arg("--groups")
+        .stdout(
+            "
       Recipe groups:
           A
           B
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups_unsorted() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group: 'Z']
         baz:
 
@@ -220,24 +220,24 @@ fn list_groups_unsorted() {
         [group: 'A', group: 'B']
         bar:
       ",
-    )
-    .args(["--groups", "--unsorted"])
-    .stdout(
-      "
+        )
+        .args(["--groups", "--unsorted"])
+        .stdout(
+            "
       Recipe groups:
           Z
           B
           A
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups_private_unsorted() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [private]
         [group: 'A']
         foo:
@@ -248,23 +248,23 @@ fn list_groups_private_unsorted() {
         [group: 'A']
         baz:
       ",
-    )
-    .args(["--groups", "--unsorted"])
-    .stdout(
-      "
+        )
+        .args(["--groups", "--unsorted"])
+        .stdout(
+            "
       Recipe groups:
           B
           A
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn list_groups_private() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [private]
         [group: 'A']
         foo:
@@ -272,13 +272,13 @@ fn list_groups_private() {
         [group: 'B']
         bar:
       ",
-    )
-    .args(["--groups", "--unsorted"])
-    .stdout(
-      "
+        )
+        .args(["--groups", "--unsorted"])
+        .stdout(
+            "
       Recipe groups:
           B
       ",
-    )
-    .run();
+        )
+        .run();
 }

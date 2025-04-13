@@ -34,23 +34,23 @@ test! {
 
 #[test]
 fn invalid_attributes_are_an_error() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [group: 'bar']
         x := 'foo'
       ",
-    )
-    .args(["--evaluate", "x"])
-    .stderr(
-      "
+        )
+        .args(["--evaluate", "x"])
+        .stderr(
+            "
         error: Assignment `x` has invalid attribute `group`
          ——▶ justfile:2:1
           │
         2 │ x := 'foo'
           │ ^
       ",
-    )
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .status(EXIT_FAILURE)
+        .run();
 }

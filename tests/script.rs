@@ -2,90 +2,90 @@ use super::*;
 
 #[test]
 fn unstable() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         [script('sh', '-u')]
         foo:
           echo FOO
       ",
-    )
-    .stderr_regex(r"error: The `\[script\]` attribute is currently unstable\..*")
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .stderr_regex(r"error: The `\[script\]` attribute is currently unstable\..*")
+        .status(EXIT_FAILURE)
+        .run();
 }
 
 #[test]
 fn script_interpreter_setting_is_unstable() {
-  Test::new()
-    .justfile("set script-interpreter := ['sh']")
-    .status(EXIT_FAILURE)
-    .stderr_regex(r"error: The `script-interpreter` setting is currently unstable\..*")
-    .run();
+    Test::new()
+        .justfile("set script-interpreter := ['sh']")
+        .status(EXIT_FAILURE)
+        .stderr_regex(r"error: The `script-interpreter` setting is currently unstable\..*")
+        .run();
 }
 
 #[test]
 fn runs_with_command() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('cat')]
         foo:
           FOO
       ",
-    )
-    .stdout(
-      "
+        )
+        .stdout(
+            "
 
 
 
 
         FOO
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn no_arguments() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('sh')]
         foo:
           echo foo
       ",
-    )
-    .stdout("foo\n")
-    .run();
+        )
+        .stdout("foo\n")
+        .run();
 }
 
 #[test]
 fn with_arguments() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('sh', '-x')]
         foo:
           echo foo
       ",
-    )
-    .stdout("foo\n")
-    .stderr("+ echo foo\n")
-    .run();
+        )
+        .stdout("foo\n")
+        .stderr("+ echo foo\n")
+        .run();
 }
 
 #[test]
 fn not_allowed_with_shebang() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('sh', '-u')]
@@ -93,25 +93,25 @@ fn not_allowed_with_shebang() {
           #!/bin/sh
 
       ",
-    )
-    .stderr(
-      "
+        )
+        .stderr(
+            "
         error: Recipe `foo` has both shebang line and `[script]` attribute
          ——▶ justfile:4:1
           │
         4 │ foo:
           │ ^^^
       ",
-    )
-    .status(EXIT_FAILURE)
-    .run();
+        )
+        .status(EXIT_FAILURE)
+        .run();
 }
 
 #[test]
 fn script_line_numbers() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('cat')]
@@ -120,9 +120,9 @@ fn script_line_numbers() {
 
           BAR
       ",
-    )
-    .stdout(
-      "
+        )
+        .stdout(
+            "
 
 
 
@@ -131,15 +131,15 @@ fn script_line_numbers() {
 
         BAR
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn script_line_numbers_with_multi_line_recipe_signature() {
-  Test::new()
-    .justfile(
-      r"
+    Test::new()
+        .justfile(
+            r"
         set unstable
 
         [script('cat')]
@@ -155,9 +155,9 @@ fn script_line_numbers_with_multi_line_recipe_signature() {
 
           BAZ
       ",
-    )
-    .stdout(
-      "
+        )
+        .stdout(
+            "
 
 
 
@@ -173,16 +173,16 @@ fn script_line_numbers_with_multi_line_recipe_signature() {
 
         BAZ
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[cfg(not(windows))]
 #[test]
 fn shebang_line_numbers() {
-  Test::new()
-    .justfile(
-      "foo:
+    Test::new()
+        .justfile(
+            "foo:
   #!/usr/bin/env cat
 
   a
@@ -194,9 +194,9 @@ fn shebang_line_numbers() {
 
 
 ",
-    )
-    .stdout(
-      "#!/usr/bin/env cat
+        )
+        .stdout(
+            "#!/usr/bin/env cat
 
 
 a
@@ -206,16 +206,16 @@ b
 
 c
 ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[cfg(not(windows))]
 #[test]
 fn shebang_line_numbers_with_multiline_constructs() {
-  Test::new()
-    .justfile(
-      r"foo b='b'\
+    Test::new()
+        .justfile(
+            r"foo b='b'\
         :
   #!/usr/bin/env cat
 
@@ -230,9 +230,9 @@ fn shebang_line_numbers_with_multiline_constructs() {
 
 
 ",
-    )
-    .stdout(
-      "#!/usr/bin/env cat
+        )
+        .stdout(
+            "#!/usr/bin/env cat
 
 
 
@@ -245,16 +245,16 @@ b
 
 c
 ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[cfg(not(windows))]
 #[test]
 fn multiline_shebang_line_numbers() {
-  Test::new()
-    .justfile(
-      "foo:
+    Test::new()
+        .justfile(
+            "foo:
   #!/usr/bin/env cat
   #!shebang
   #!shebang
@@ -268,9 +268,9 @@ fn multiline_shebang_line_numbers() {
 
 
 ",
-    )
-    .stdout(
-      "#!/usr/bin/env cat
+        )
+        .stdout(
+            "#!/usr/bin/env cat
 #!shebang
 #!shebang
 
@@ -282,16 +282,16 @@ b
 
 c
 ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[cfg(windows)]
 #[test]
 fn shebang_line_numbers() {
-  Test::new()
-    .justfile(
-      "foo:
+    Test::new()
+        .justfile(
+            "foo:
   #!/usr/bin/env cat
 
   a
@@ -303,9 +303,9 @@ fn shebang_line_numbers() {
 
 
 ",
-    )
-    .stdout(
-      "
+        )
+        .stdout(
+            "
 
 
 
@@ -316,15 +316,15 @@ b
 
 c
 ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn no_arguments_with_default_script_interpreter() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script]
@@ -337,21 +337,21 @@ fn no_arguments_with_default_script_interpreter() {
             *u*) echo '-u is set';;
           esac
       ",
-    )
-    .stdout(
-      "
+        )
+        .stdout(
+            "
         -e is set
         -u is set
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn no_arguments_with_non_default_script_interpreter() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         set script-interpreter := ['sh']
@@ -366,6 +366,6 @@ fn no_arguments_with_non_default_script_interpreter() {
             *u*) echo '-u is set';;
           esac
       ",
-    )
-    .run();
+        )
+        .run();
 }

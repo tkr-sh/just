@@ -58,47 +58,47 @@ default:
 
 #[test]
 fn simple() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         foo:
           #!/bin/sh
           echo bar
       ",
-    )
-    .stdout("bar\n")
-    .run();
+        )
+        .stdout("bar\n")
+        .run();
 }
 
 #[test]
 fn echo() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         @baz:
           #!/bin/sh
           echo fizz
       ",
-    )
-    .stdout("fizz\n")
-    .stderr("#!/bin/sh\necho fizz\n")
-    .run();
+        )
+        .stdout("fizz\n")
+        .stderr("#!/bin/sh\necho fizz\n")
+        .run();
 }
 
 #[test]
 fn echo_with_command_color() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         @baz:
           #!/bin/sh
           echo fizz
       ",
-    )
-    .args(["--color", "always", "--command-color", "purple"])
-    .stdout("fizz\n")
-    .stderr("\u{1b}[1;35m#!/bin/sh\u{1b}[0m\n\u{1b}[1;35mecho fizz\u{1b}[0m\n")
-    .run();
+        )
+        .args(["--color", "always", "--command-color", "purple"])
+        .stdout("fizz\n")
+        .stderr("\u{1b}[1;35m#!/bin/sh\u{1b}[0m\n\u{1b}[1;35mecho fizz\u{1b}[0m\n")
+        .run();
 }
 
 // This test exists to make sure that shebang recipes run correctly.  Although
@@ -108,9 +108,9 @@ fn echo_with_command_color() {
 // when a line fails.
 #[test]
 fn run_shebang() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         a:
           #!/usr/bin/env sh
           code=200
@@ -118,8 +118,8 @@ fn run_shebang() {
           x
           x
       ",
-    )
-    .status(200)
-    .stderr("error: Recipe `a` failed with exit code 200\n")
-    .run();
+        )
+        .status(200)
+        .stderr("error: Recipe `a` failed with exit code 200\n")
+        .run();
 }

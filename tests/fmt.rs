@@ -76,67 +76,69 @@ test! {
 
 #[test]
 fn unstable_passed() {
-  let tmp = tempdir();
+    let tmp = tempdir();
 
-  let justfile = tmp.path().join("justfile");
+    let justfile = tmp.path().join("justfile");
 
-  fs::write(&justfile, "x    :=    'hello'   ").unwrap();
+    fs::write(&justfile, "x    :=    'hello'   ").unwrap();
 
-  let output = Command::new(executable_path("just"))
-    .current_dir(tmp.path())
-    .arg("--fmt")
-    .arg("--unstable")
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .current_dir(tmp.path())
+        .arg("--fmt")
+        .arg("--unstable")
+        .output()
+        .unwrap();
 
-  if !output.status.success() {
-    eprintln!("{}", String::from_utf8_lossy(&output.stderr));
-    eprintln!("{}", String::from_utf8_lossy(&output.stdout));
-    panic!("justfile failed with status: {}", output.status);
-  }
+    if !output.status.success() {
+        eprintln!("{}", String::from_utf8_lossy(&output.stderr));
+        eprintln!("{}", String::from_utf8_lossy(&output.stdout));
+        panic!("justfile failed with status: {}", output.status);
+    }
 
-  assert_eq!(fs::read_to_string(&justfile).unwrap(), "x := 'hello'\n");
+    assert_eq!(fs::read_to_string(&justfile).unwrap(), "x := 'hello'\n");
 }
 
 #[test]
 fn write_error() {
-  // skip this test if running as root, since root can write files even if
-  // permissions would otherwise forbid it
-  #[cfg(not(windows))]
-  if unsafe { libc::getuid() } == 0 {
-    return;
-  }
+    // skip this test if running as root, since root can write files even if
+    // permissions would otherwise forbid it
+    #[cfg(not(windows))]
+    if unsafe { libc::getuid() } == 0 {
+        return;
+    }
 
-  let tempdir = temptree! {
-    justfile: "x    :=    'hello'   ",
-  };
+    let tempdir = temptree! {
+      justfile: "x    :=    'hello'   ",
+    };
 
-  let test = Test::with_tempdir(tempdir)
-    .no_justfile()
-    .args(["--fmt", "--unstable"])
-    .status(EXIT_FAILURE)
-    .stderr_regex(if cfg!(windows) {
-      r"error: Failed to write justfile to `.*`: Access is denied. \(os error 5\)\n"
-    } else {
-      r"error: Failed to write justfile to `.*`: Permission denied \(os error 13\)\n"
-    });
+    let test = Test::with_tempdir(tempdir)
+        .no_justfile()
+        .args(["--fmt", "--unstable"])
+        .status(EXIT_FAILURE)
+        .stderr_regex(
+            if cfg!(windows) {
+                r"error: Failed to write justfile to `.*`: Access is denied. \(os error 5\)\n"
+            } else {
+                r"error: Failed to write justfile to `.*`: Permission denied \(os error 13\)\n"
+            },
+        );
 
-  let justfile_path = test.justfile_path();
+    let justfile_path = test.justfile_path();
 
-  let output = Command::new("chmod")
-    .arg("400")
-    .arg(&justfile_path)
-    .output()
-    .unwrap();
+    let output = Command::new("chmod")
+        .arg("400")
+        .arg(&justfile_path)
+        .output()
+        .unwrap();
 
-  assert!(output.status.success());
+    assert!(output.status.success());
 
-  let _tempdir = test.run();
+    let _tempdir = test.run();
 
-  assert_eq!(
-    fs::read_to_string(&justfile_path).unwrap(),
-    "x    :=    'hello'   "
-  );
+    assert_eq!(
+        fs::read_to_string(&justfile_path).unwrap(),
+        "x    :=    'hello'   "
+    );
 }
 
 test! {
@@ -1067,56 +1069,56 @@ test! {
 
 #[test]
 fn exported_parameter() {
-  Test::new()
-    .justfile("foo +$f:")
-    .args(["--dump"])
-    .stdout("foo +$f:\n")
-    .run();
+    Test::new()
+        .justfile("foo +$f:")
+        .args(["--dump"])
+        .stdout("foo +$f:\n")
+        .run();
 }
 
 #[test]
 fn multi_argument_attribute() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         [script('a', 'b', 'c')]
         foo:
       ",
-    )
-    .arg("--dump")
-    .stdout(
-      "
+        )
+        .arg("--dump")
+        .stdout(
+            "
         set unstable := true
 
         [script('a', 'b', 'c')]
         foo:
       ",
-    )
-    .run();
+        )
+        .run();
 }
 
 #[test]
 fn doc_attribute_suppresses_comment() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set unstable
 
         # COMMENT
         [doc('ATTRIBUTE')]
         foo:
       ",
-    )
-    .arg("--dump")
-    .stdout(
-      "
+        )
+        .arg("--dump")
+        .stdout(
+            "
         set unstable := true
 
         [doc('ATTRIBUTE')]
         foo:
       ",
-    )
-    .run();
+        )
+        .run();
 }

@@ -4,35 +4,35 @@ use super::*;
 /// type for clarity.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
 pub struct Name<'src> {
-  pub token: Token<'src>,
+    pub token: Token<'src>,
 }
 
 impl<'src> Name<'src> {
-  pub fn from_identifier(token: Token<'src>) -> Self {
-    assert_eq!(token.kind, TokenKind::Identifier);
-    Self { token }
-  }
+    pub fn from_identifier(token: Token<'src>) -> Self {
+        assert_eq!(token.kind, TokenKind::Identifier);
+        Self { token }
+    }
 }
 
 impl<'src> Deref for Name<'src> {
-  type Target = Token<'src>;
+    type Target = Token<'src>;
 
-  fn deref(&self) -> &Self::Target {
-    &self.token
-  }
+    fn deref(&self) -> &Self::Target {
+        &self.token
+    }
 }
 
 impl Display for Name<'_> {
-  fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-    write!(f, "{}", self.lexeme())
-  }
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.lexeme())
+    }
 }
 
 impl<'src> Serialize for Name<'src> {
-  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-  where
-    S: Serializer,
-  {
-    serializer.serialize_str(self.lexeme())
-  }
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(self.lexeme())
+    }
 }

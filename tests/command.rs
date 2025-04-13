@@ -49,19 +49,19 @@ test! {
 
 #[test]
 fn env_is_loaded() {
-  Test::new()
-    .justfile(
-      "
+    Test::new()
+        .justfile(
+            "
         set dotenv-load
 
         x:
           echo XYZ
       ",
-    )
-    .args(["--command", "sh", "-c", "printf $DOTENV_KEY"])
-    .write(".env", "DOTENV_KEY=dotenv-value")
-    .stdout("dotenv-value")
-    .run();
+        )
+        .args(["--command", "sh", "-c", "printf $DOTENV_KEY"])
+        .write(".env", "DOTENV_KEY=dotenv-value")
+        .stdout("dotenv-value")
+        .run();
 }
 
 test! {
@@ -111,39 +111,39 @@ test! {
 
 #[test]
 fn working_directory_is_correct() {
-  let tmp = tempdir();
+    let tmp = tempdir();
 
-  fs::write(tmp.path().join("justfile"), "").unwrap();
-  fs::write(tmp.path().join("bar"), "baz").unwrap();
-  fs::create_dir(tmp.path().join("foo")).unwrap();
+    fs::write(tmp.path().join("justfile"), "").unwrap();
+    fs::write(tmp.path().join("bar"), "baz").unwrap();
+    fs::create_dir(tmp.path().join("foo")).unwrap();
 
-  let output = Command::new(executable_path("just"))
-    .args(["--command", "cat", "bar"])
-    .current_dir(tmp.path().join("foo"))
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .args(["--command", "cat", "bar"])
+        .current_dir(tmp.path().join("foo"))
+        .output()
+        .unwrap();
 
-  assert_eq!(str::from_utf8(&output.stderr).unwrap(), "");
+    assert_eq!(str::from_utf8(&output.stderr).unwrap(), "");
 
-  assert!(output.status.success());
+    assert!(output.status.success());
 
-  assert_eq!(str::from_utf8(&output.stdout).unwrap(), "baz");
+    assert_eq!(str::from_utf8(&output.stdout).unwrap(), "baz");
 }
 
 #[test]
 fn command_not_found() {
-  let tmp = tempdir();
+    let tmp = tempdir();
 
-  fs::write(tmp.path().join("justfile"), "").unwrap();
+    fs::write(tmp.path().join("justfile"), "").unwrap();
 
-  let output = Command::new(executable_path("just"))
-    .args(["--command", "asdfasdfasdfasdfadfsadsfadsf", "bar"])
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .args(["--command", "asdfasdfasdfasdfadfsadsfadsf", "bar"])
+        .output()
+        .unwrap();
 
-  assert!(str::from_utf8(&output.stderr)
-    .unwrap()
-    .starts_with("error: Failed to invoke `asdfasdfasdfasdfadfsadsfadsf` `bar`:"));
+    assert!(str::from_utf8(&output.stderr)
+        .unwrap()
+        .starts_with("error: Failed to invoke `asdfasdfasdfasdfadfsadsfadsf` `bar`:"));
 
-  assert!(!output.status.success());
+    assert!(!output.status.success());
 }
